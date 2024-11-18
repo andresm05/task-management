@@ -7,13 +7,12 @@ import {useRouter} from "next/router";
 import IsLoading from "@/molecules/isLoading";
 import useMiddleware from "@/hooks/useMiddleware";
 import {Role} from "@/utils/enums";
-import { ProjectCreationForm } from "@/molecules/projectCreationForm";
+import { ProjectCreationForm } from "@/molecules/ProjectCreationForm";
 
 
 const CreateItemPage: React.FC = () => {
 
     const user = useMiddleware(Role.USER);
-
     const router = useRouter();
 
     const handleBack = (event: any) => {
