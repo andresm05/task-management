@@ -14,6 +14,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
+  const router = useRouter();
   const [selectedTask, setSelectedTask] = useState<{
     id: string;
     title: string;
@@ -21,25 +22,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
     status: string;
     dueDate: string;
   } | null>(null);
-  const [popupOpen, setPopupOpen] = useState(false);
-
-  const router = useRouter();
-
-  // Abre el popup de eliminación
-  const handleOpenDeletePopup = (task: {
+  
+  const [selectedTaskDelete, setSelectedTaskDelete] = useState<{
     id: string;
     title: string;
-    description: string;
-    status: string;
-    dueDate: string;
-  }) => {
-    setSelectedTask(task);
-    setPopupOpen(true);
-  };
+  } | null>(null);   
 
   // Cierra los popups
   const handleClosePopup = () => {
-    setPopupOpen(false);
+    setSelectedTaskDelete(null);
     setSelectedTask(null);
   };
 
@@ -99,7 +90,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
                 {/* Botón para abrir el popup de eliminación */}
                 <Button
                   className="m-4"
-                  onClick={() => handleOpenDeletePopup(task)}
+                  onClick={() => setSelectedTaskDelete(task)}
                 >
                   <FaTrashAlt className="text-red-500 justify-end m-4 w-10 h-10 " />
                 </Button>
@@ -128,11 +119,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
       )}
 
       {/* Mostrar el popup de eliminación */}
-      {popupOpen && selectedTask && (
+      {selectedTaskDelete && (
         <DeleteTaskPopup
-          open={popupOpen}
-          taskId={selectedTask.id}
-          taskTitle={selectedTask.title}
+          open={Boolean(selectedTaskDelete)}
+          taskId={selectedTaskDelete.id}
+          taskTitle={selectedTaskDelete.title}
           onClose={handleClosePopup} // Cerrar el popup
           onTaskDeleted={handleTaskDeleted} // Acción después de la eliminación
         />
