@@ -1,12 +1,11 @@
-// src/molecules/EditTaskPopup.tsx
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@apollo/client";
-import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks"; // Asegúrate de tener la mutación de actualización
-import { Task } from "@/types/tasks";
+import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks"; 
+import { Task, TaskStatus } from "@/types/tasks";
 
 interface EditTaskPopupProps {
   open: boolean;
@@ -17,43 +16,44 @@ interface EditTaskPopupProps {
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   open,
-  task: { id, title, description, status, dueDate},
+  task: { id, title, description, status, dueDate },
   onClose,
   onTaskUpdated,
 }) => {
+  const formattedDueDate = dueDate && !isNaN(new Date(dueDate).getTime())
+    ? new Date(dueDate).toISOString().slice(0, 16)
+    : "";
+
+  const [newTitle, setNewTitle] = useState(title || "");
+  const [newDescription, setNewDescription] = useState(description || "");
+  const [newStatus, setNewStatus] = useState(status || "PENDING");
+  const [newDueDate, setNewDueDate] = useState(formattedDueDate);
 
   const [updateTask, { loading, error }] = useMutation(UPDATE_TASK);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target as HTMLFormElement);
-    const data = Object.fromEntries(formData.entries());
-    const newtitle = data.title as string;
-    const newDescription = data.description as string;
-    const neStatus = data.status;
-    const NewdueDate = new Date(data.dueDate as string);
-
     try {
-      // Asegúrate de pasar el ID como `id`, que es lo que la mutación espera
       const { data } = await updateTask({
         variables: {
-          newtitle,
-          newDescription,
-          neStatus,
-          NewdueDate,
+          id,
+          title: newTitle,
+          description: newDescription,
+          status: newStatus,
+          dueDate: newDueDate || null,
         },
       });
 
-      onTaskUpdated(); // Actualiza la tarea
-      onClose(); // Cierra el popup
+      onTaskUpdated();
+      onClose();
       console.log("Tarea actualizada:", data.updateTask);
     } catch (err) {
       console.error("Error al actualizar tarea:", err);
     }
   };
 
-  if (!open) return null; // Si el popup no está abierto, no se renderiza nada.
+  if (!open) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
@@ -63,8 +63,10 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
           <div className="space-y-2">
             <Label htmlFor="title">Título</Label>
             <Input
-            name="title"
-            value={title as string}
+              id="title"
+              name="title"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -72,7 +74,8 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
             <Textarea
               id="description"
               name="description"
-              value={description as string}
+              value={newDescription}
+              onChange={(e) => setNewDescription(e.target.value)}
             />
           </div>
           <div className="space-y-2">
@@ -80,6 +83,8 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
             <select
               id="status"
               name="status"
+              value={newStatus}
+              onChange={(e) => setNewStatus(e.target.value as TaskStatus)}
               className="w-full p-2 border rounded"
             >
               <option value="PENDING">Por hacer</option>
@@ -93,11 +98,12 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
               id="dueDate"
               type="datetime-local"
               name="dueDate"
-              value={dueDate}
+              value={newDueDate}
+              onChange={(e) => setNewDueDate(e.target.value)}
             />
           </div>
           <div className="flex justify-between mt-4">
-            <Button type="submit" onClick={onClose} className="bg-gray-300">
+            <Button type="button" onClick={onClose} className="bg-gray-300">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
@@ -112,3 +118,4 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
 };
 
 export default EditTaskPopup;
+
