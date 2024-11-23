@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 import IsLoading from "@/molecules/isLoading";
 import {Role} from "@/utils/enums";
-import { ProjectsCard } from "@/molecules/ProjectsCard";
+import { ProjectData } from "@/molecules/ProjectData";
 
 export default function AdminPage() {
     const user = useMiddleware(Role.USER);
@@ -30,7 +30,7 @@ export default function AdminPage() {
                         <Plus />Agregar un Proyecto
                     </Link>
                 </Button>
-                <ProjectsCard />
+                <ProjectData />
             </div>
         </AdminLayout>
     );

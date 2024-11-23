@@ -8,8 +8,10 @@ export const GET_PROJECTS = gql`
       description
       tasks {
         id
-        title
-        status
+        assignee {
+          id
+          name
+        }
       }
     }
   }
