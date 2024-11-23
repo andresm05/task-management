@@ -24,11 +24,13 @@ const CreateTaskPage: React.FC = () => {
     const data = Object.fromEntries(formData.entries());
     const title = data.title as string;
     const description = data.description as string;
+    const assignee = data.assignee as string;
     const dueDate = new Date(data.dueDate as string);
 
     try {
       const { data } = await createTask({
         variables: {
+          assigneeId: assignee,
           title,
           description,
           status: TaskStatus.PENDING,

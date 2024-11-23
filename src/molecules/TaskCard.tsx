@@ -6,7 +6,6 @@ import React, { useState } from "react";
 import { FaTrashAlt, FaPenSquare } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import DeleteTaskPopup from "@/molecules/deletePopup";
-import { useRouter } from "next/router";
 import EditTaskPopup from "@/molecules/editTaskPopup"; // Importamos el nuevo componente
 import { Task, TaskByProject } from "@/types/tasks";
 
@@ -15,7 +14,6 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
-  const router = useRouter();
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   
   const [selectedTaskDelete, setSelectedTaskDelete] = useState<{
@@ -80,7 +78,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
             </p>
             {task.assignee && (
               <p className="text-gray-500">
-                <strong>Asignado a:</strong> {task.assignee}
+                <strong>Asignado a:</strong> {task.assignee.name}
               </p>
             )}
           </div>

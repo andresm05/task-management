@@ -2,7 +2,10 @@
 export interface Task {
     id: number,       
     title: string,
-    assignee: string,
+    assignee: {
+        id: string,
+        name: string,
+    },
     description: string,
     status: TaskStatus 
     dueDate: string,
