@@ -20,9 +20,6 @@ const CreateProjectPage: React.FC = () => {
         variables: { name, description },
       });
       console.log("Proyecto creado exitosamente:", data.createProject); // Asegúrate de este log
-      alert("Proyecto creado exitosamente");
-      setName(""); // Reinicia los campos del formulario
-      setDescription("");
     } catch (err) {
       console.error("Error al crear proyecto:", err);
     }
@@ -33,11 +30,10 @@ const CreateProjectPage: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-8">
-      <h1 className="text-2xl font-bold mb-4">Crear Nuevo Proyecto</h1>
+    <div className="container mx-auto p-8 flex flex-col w-1/2">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Nombre del Proyecto</Label>
+          <Label htmlFor="name" className="text-center">Nombre del Proyecto</Label>
           <Input
             id="name"
             name="name"

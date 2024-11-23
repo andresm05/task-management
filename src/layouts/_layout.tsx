@@ -2,7 +2,7 @@ import React from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/molecules/sidebar";
 import {Toaster} from "@/components/ui/toaster";
-import {ChartCandlestick, CircleDollarSign, HandPlatter, MapPinned, User, Utensils} from "lucide-react";
+import {ChartCandlestick, User, Album} from "lucide-react";
 import {Role, UserProps} from "@/utils/enums";
 
 interface AdminLayoutProps {
@@ -15,27 +15,10 @@ const items = [
     {
         title: "Gestión de proyectos",
         url: "/admin",
-        icon: Utensils,
+        icon: Album,
         role: Role.USER
     },
-    {
-        title: "Gestión de pagos",
-        url: "/admin/payments",
-        icon: CircleDollarSign,
-        role: Role.ADMIN
-    },
-    {
-        title: "Órdenes",
-        url: "/admin/orders",
-        icon: HandPlatter,
-        role: Role.USER
-    },
-    {
-        title: "Gestión de mesas",
-        url: "/admin/tables",
-        icon: MapPinned,
-        role: Role.ADMIN
-    },
+
     {
         title: "Análisis de datos",
         url: "/admin/data",
