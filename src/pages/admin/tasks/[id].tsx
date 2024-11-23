@@ -30,7 +30,7 @@ const TasksProject = () => {
           Gestión de Proyectos
         </h1>
         <Button className="m-4" asChild>
-          <Link href={{ pathname: "/admin/createTask", query: { id: id } }}>
+          <Link href={{ pathname: "/admin/tasks/create/[id]", query: { id: id } }}>
             <Plus /> Agregar una tarea
           </Link>
         </Button>

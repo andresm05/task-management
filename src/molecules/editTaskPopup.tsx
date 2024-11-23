@@ -6,47 +6,42 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@apollo/client";
 import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks"; // Asegúrate de tener la mutación de actualización
+import { Task } from "@/types/tasks";
 
 interface EditTaskPopupProps {
   open: boolean;
-  taskId: string;
-  taskTitle: string;
-  taskDescription: string;
-  taskStatus: string;
-  taskDueDate: string;
+  task: Task;
   onClose: () => void;
   onTaskUpdated: () => void;
 }
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   open,
-  taskId,
-  taskTitle,
-  taskDescription,
-  taskStatus,
-  taskDueDate,
+  task: { id, title, description, status, dueDate},
   onClose,
   onTaskUpdated,
 }) => {
-  const [title, setTitle] = useState(taskTitle);
-  const [description, setDescription] = useState(taskDescription);
-  const [status, setStatus] = useState(taskStatus);
-  const [dueDate, setDueDate] = useState(taskDueDate);
 
   const [updateTask, { loading, error }] = useMutation(UPDATE_TASK);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+    const newtitle = data.title as string;
+    const newDescription = data.description as string;
+    const neStatus = data.status;
+    const NewdueDate = new Date(data.dueDate as string);
+
     try {
       // Asegúrate de pasar el ID como `id`, que es lo que la mutación espera
       const { data } = await updateTask({
         variables: {
-          id: taskId, // Usamos el ID correcto según la mutación
-          title,
-          description,
-          status,
-          dueDate,
+          newtitle,
+          newDescription,
+          neStatus,
+          NewdueDate,
         },
       });
 
@@ -68,26 +63,23 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
           <div className="space-y-2">
             <Label htmlFor="title">Título</Label>
             <Input
-              id="title"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              required
+            name="title"
+            value={title as string}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="description"
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
+              name="description"
+              value={description as string}
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="status">Estado</Label>
             <select
               id="status"
-              value={status}
-              onChange={(e) => setStatus(e.target.value)}
+              name="status"
               className="w-full p-2 border rounded"
             >
               <option value="PENDING">Por hacer</option>
@@ -99,13 +91,13 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
             <Label htmlFor="dueDate">Fecha de vencimiento</Label>
             <Input
               id="dueDate"
-              type="date"
+              type="datetime-local"
+              name="dueDate"
               value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
             />
           </div>
           <div className="flex justify-between mt-4">
-            <Button type="button" onClick={onClose} className="bg-gray-300">
+            <Button type="submit" onClick={onClose} className="bg-gray-300">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>

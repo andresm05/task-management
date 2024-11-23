@@ -1,32 +1,37 @@
 import { useRouter } from 'next/router';
-import { useState } from 'react';
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { CREATE_TASK } from '@/utils/graphql/mutations/tasks';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'; 
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { TaskStatus } from '@/types/tasks';
+import { GET_ALL_USERS_QUERY } from '@/utils/graphql/queries/users';
+import { AllUsers } from '@/types/users';
 
 const CreateTaskPage: React.FC = () => {
   const router = useRouter();
   const { id } = router.query; // Obtener el id del proyecto de los parámetros de la URL
 
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('PENDING');
-  const [dueDate, setDueDate] = useState('');
-
   const [createTask, { loading, error }] = useMutation(CREATE_TASK);
+  const { data } = useQuery<AllUsers>(GET_ALL_USERS_QUERY);
+  const users = data?.users || [];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const formData = new FormData(e.target as HTMLFormElement);
+    const data = Object.fromEntries(formData.entries());
+    const title = data.title as string;
+    const description = data.description as string;
+    const dueDate = new Date(data.dueDate as string);
 
     try {
       const { data } = await createTask({
         variables: {
           title,
           description,
-          status,
+          status: TaskStatus.PENDING,
           dueDate,
           projectId: id, // Usamos el ID del proyecto pasado como parámetro
         },
@@ -37,8 +42,7 @@ const CreateTaskPage: React.FC = () => {
 
       // Redirigir a la página de gestión del proyecto después de crear la tarea
       router.push({
-        pathname: `/admin/${id}`,
-        query: { id },
+        pathname: `/admin/tasks/${id}`,
       });
 
     } catch (err) {
@@ -57,11 +61,22 @@ const CreateTaskPage: React.FC = () => {
           <Input
             id="title"
             type="text"
+            name='title'
             placeholder="Ingresa el título"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
             required
           />
+        </div>
+
+        <div>
+          <select name="assignee" id="assignee" required
+            className="w-full p-2 border border-gray-300 rounded-md">
+            <option value="">Seleccionar Responsable</option>
+            {users.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="space-y-2">
@@ -69,32 +84,17 @@ const CreateTaskPage: React.FC = () => {
           <Textarea
             id="description"
             placeholder="Añadir una descripción"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            name='description'
             rows={4}
           />
-        </div>
-
-        <div>
-          <Label htmlFor="status">Estado</Label>
-          <select
-            id="status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
-            <option value="PENDING">Por hacer</option>
-            <option value="IN_PROGRESS">En progreso</option>
-            <option value="COMPLETED">Hecho</option>
-          </select>
         </div>
 
         <div className="space-y-2">
           <Label htmlFor="dueDate">Fecha de vencimiento</Label>
           <Input
             id="dueDate"
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
+            type="datetime-local"
+            name='dueDate'
           />
         </div>
 

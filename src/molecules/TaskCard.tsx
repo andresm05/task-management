@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import DeleteTaskPopup from "@/molecules/deletePopup";
 import { useRouter } from "next/router";
 import EditTaskPopup from "@/molecules/editTaskPopup"; // Importamos el nuevo componente
+import { Task, TaskByProject } from "@/types/tasks";
 
 interface TaskCardProps {
   id: string; // ID del proyecto
@@ -15,18 +16,26 @@ interface TaskCardProps {
 
 const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
   const router = useRouter();
-  const [selectedTask, setSelectedTask] = useState<{
-    id: string;
-    title: string;
-    description: string;
-    status: string;
-    dueDate: string;
-  } | null>(null);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
   
   const [selectedTaskDelete, setSelectedTaskDelete] = useState<{
     id: string;
     title: string;
-  } | null>(null);   
+  } | null>(null); 
+  
+  const handleDateFormated = (timestamp: string): string => {
+    const date = new Date(Number(timestamp)); // Convertir el timestamp a un objeto Date
+  
+    // Formatear la fecha como "día mes año, hora:minutos"
+    return new Intl.DateTimeFormat('es-ES', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false, // Formato 24 horas
+    }).format(date);
+  };
 
   // Cierra los popups
   const handleClosePopup = () => {
@@ -36,13 +45,15 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
 
   const handleTaskDeleted = () => {
     console.log("Tarea eliminada exitosamente");
-    router.reload(); // Recarga la página después de la eliminación
+    refetch(); // Recarga la página después de la eliminación
   };
 
   // Consulta GraphQL para obtener las tareas del proyecto
-  const { data, loading, error } = useQuery(GET_TASKS_BY_PROJECT, {
+  const { data, loading, error, refetch } = useQuery<TaskByProject>(GET_TASKS_BY_PROJECT, {
     variables: { projectId: id },
   });
+
+  console.log(data?.tasksByProject);
 
   if (loading) return <p>Cargando tareas...</p>;
   if (error) return <p>Error al cargar tareas: {error.message}</p>;
@@ -51,7 +62,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-      {tasks.map((task: any) => (
+      {tasks.map((task) => (
         <Card key={task.id} className="bg-slate-200 justify-around">
           <CardHeader>
             <h2 className="text-lg font-bold text-gray-800">{task.title}</h2>
@@ -65,13 +76,11 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
             </p>
             <p className="text-gray-500">
               <strong>Fecha límite:</strong>{" "}
-              {task.dueDate
-                ? new Date(task.dueDate).toLocaleDateString()
-                : "Sin fecha"}
+              {handleDateFormated(task.dueDate)}
             </p>
             {task.assignee && (
               <p className="text-gray-500">
-                <strong>Asignado a:</strong> {task.assignee.name}
+                <strong>Asignado a:</strong> {task.assignee}
               </p>
             )}
           </div>
@@ -79,10 +88,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
             <div className="h-full flex flex-col text-center">
               <div className="h-1/2">
                 <p className="text-sm text-gray-400">
-                  Creado: {new Date(task.createdAt).toLocaleDateString()}
+                  Creado: {handleDateFormated(task.createdAt)}
                 </p>
                 <p className="text-sm text-gray-400">
-                  Actualizado: {new Date(task.updatedAt).toLocaleDateString()}
+                  Actualizado: {handleDateFormated(task.updatedAt)}
                 </p>
               </div>
 
@@ -90,7 +99,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
                 {/* Botón para abrir el popup de eliminación */}
                 <Button
                   className="m-4"
-                  onClick={() => setSelectedTaskDelete(task)}
+                  onClick={() => setSelectedTaskDelete({
+                    id: task.id as unknown as string,
+                    title: task.title,
+                  })}
                 >
                   <FaTrashAlt className="text-red-500 justify-end m-4 w-10 h-10 " />
                 </Button>
@@ -108,13 +120,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
       {selectedTask && (
         <EditTaskPopup
           open={Boolean(selectedTask)}
-          taskId={selectedTask.id}
-          taskTitle={selectedTask.title}
-          taskDescription={selectedTask.description}
-          taskStatus={selectedTask.status}
-          taskDueDate={selectedTask.dueDate}
+          task={selectedTask}
           onClose={() => setSelectedTask(null)} // Cerrar el popup
-          onTaskUpdated={() => router.reload()} // Recargar la página al actualizar
+          onTaskUpdated={refetch} // Recargar la página al actualizar
         />
       )}
 
