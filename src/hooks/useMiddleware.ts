@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { ME_QUERY } from "@/utils/graphql/queries/auth";
 import {Role, UserProps} from "@/utils/enums";

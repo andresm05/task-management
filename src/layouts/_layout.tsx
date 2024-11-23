@@ -13,7 +13,7 @@ interface AdminLayoutProps {
 // Menu items.
 const items = [
     {
-        title: "Gestión del menú",
+        title: "Gestión de proyectos",
         url: "/admin",
         icon: Utensils,
         role: Role.USER

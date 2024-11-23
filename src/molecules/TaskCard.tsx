@@ -1,141 +1,114 @@
-// src/components/TaskCard.tsx
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
-import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
-import { useQuery } from "@apollo/client";
-import React, { useState } from "react";
-import { FaTrashAlt, FaPenSquare } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
-import DeleteTaskPopup from "@/molecules/deletePopup";
-import EditTaskPopup from "@/molecules/editTaskPopup"; // Importamos el nuevo componente
-import { Task, TaskByProject } from "@/types/tasks";
+import { Card, CardFooter, CardHeader } from "@/components/ui/card"
+import { Task } from "@/types/tasks";
+import { useState } from "react";
+import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
+import DeleteTaskPopup from "./DeleteTaskPopup";
+import EditTaskPopup from "./EditTaskPopup";
+import { handleShowStatus } from "@/utils/helpers";
 
 interface TaskCardProps {
-  id: string; // ID del proyecto
+    task: Task;
+    refetch: () => void;
 }
 
-const TaskCard: React.FC<TaskCardProps> = ({ id }) => {
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  
-  const [selectedTaskDelete, setSelectedTaskDelete] = useState<{
-    id: string;
-    title: string;
-  } | null>(null); 
-  
-  const handleDateFormated = (timestamp: string): string => {
-    const date = new Date(Number(timestamp)); // Convertir el timestamp a un objeto Date
-  
-    // Formatear la fecha como "día mes año, hora:minutos"
-    return new Intl.DateTimeFormat('es-ES', {
-      day: '2-digit',
-      month: 'long',
-      year: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false, // Formato 24 horas
-    }).format(date);
-  };
+export const TaskCard: React.FC<TaskCardProps> = ({
+    task,
+    refetch
+}) => {
 
-  // Cierra los popups
-  const handleClosePopup = () => {
-    setSelectedTaskDelete(null);
-    setSelectedTask(null);
-  };
+    const [openDelete, setOpenDelete] = useState(false);
+    const [openEdit, setOpenEdit] = useState(false);
 
-  const handleTaskDeleted = () => {
-    console.log("Tarea eliminada exitosamente");
-    refetch(); // Recarga la página después de la eliminación
-  };
 
-  // Consulta GraphQL para obtener las tareas del proyecto
-  const { data, loading, error, refetch } = useQuery<TaskByProject>(GET_TASKS_BY_PROJECT, {
-    variables: { projectId: id },
-  });
+    const handleDateFormated = (timestamp: string): string => {
+        const date = new Date(Number(timestamp)); // Convertir el timestamp a un objeto Date
 
-  console.log(data?.tasksByProject);
+        // Formatear la fecha como "día mes año, hora:minutos"
+        return new Intl.DateTimeFormat('es-ES', {
+            day: '2-digit',
+            month: 'long',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false, // Formato 24 horas
+        }).format(date);
+    };
+    return (
+        <div>
 
-  if (loading) return <p>Cargando tareas...</p>;
-  if (error) return <p>Error al cargar tareas: {error.message}</p>;
+            <Card
+                key={task.id}
+                className="bg-white shadow-md rounded-lg overflow-hidden border border-gray-300"
+            >
+                <CardHeader className="bg-gray-100 p-4">
+                    <h2 className="text-xl font-semibold text-gray-800">{task.title}</h2>
+                </CardHeader>
 
-  const tasks = data?.tasksByProject || []; // Evita errores si no hay tareas
+                <div className="p-6 space-y-4">
+                    <p className="text-gray-700 text-sm">
+                        {task.description || "Sin descripción"}
+                    </p>
 
-  return (
-    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-      {tasks.map((task) => (
-        <Card key={task.id} className="bg-slate-200 justify-around">
-          <CardHeader>
-            <h2 className="text-lg font-bold text-gray-800">{task.title}</h2>
-          </CardHeader>
-          <div className="p-4">
-            <p className="text-gray-600">
-              {task.description || "Sin descripción"}
-            </p>
-            <p className="text-gray-500">
-              <strong>Estado:</strong> {task.status || "No especificado"}
-            </p>
-            <p className="text-gray-500">
-              <strong>Fecha límite:</strong>{" "}
-              {handleDateFormated(task.dueDate)}
-            </p>
-            {task.assignee && (
-              <p className="text-gray-500">
-                <strong>Asignado a:</strong> {task.assignee.name}
-              </p>
-            )}
-          </div>
-          <CardFooter className="justify-end flex-col h-1/2">
-            <div className="h-full flex flex-col text-center">
-              <div className="h-1/2">
-                <p className="text-sm text-gray-400">
-                  Creado: {handleDateFormated(task.createdAt)}
-                </p>
-                <p className="text-sm text-gray-400">
-                  Actualizado: {handleDateFormated(task.updatedAt)}
-                </p>
-              </div>
+                    {/* Estado con estilos dinámicos */}
+                    <p
+                        className={`text-sm font-semibold py-1 px-2 rounded-lg inline-block ${task.status === "PENDING"
+                                ? "bg-yellow-100 text-yellow-800"
+                                : task.status === "IN_PROGRESS"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : task.status === "COMPLETED"
+                                        ? "bg-green-100 text-green-800"
+                                        : "bg-gray-100 text-gray-800"
+                            }`}
+                    >
+                        Estado: {handleShowStatus(task.status)}
+                    </p>
 
-              <div className="flex flex-row h-1/2">
-                {/* Botón para abrir el popup de eliminación */}
-                <Button
-                  className="m-4"
-                  onClick={() => setSelectedTaskDelete({
-                    id: task.id as unknown as string,
-                    title: task.title,
-                  })}
-                >
-                  <FaTrashAlt className="text-red-500 justify-end m-4 w-10 h-10 " />
-                </Button>
-                {/* Botón para abrir el popup de edición */}
-                <Button className="m-4" onClick={() => setSelectedTask(task)}>
-                  <FaPenSquare className="text-blue-500 justify-end m-4 w-10 h-10" />
-                </Button>
-              </div>
-            </div>
-          </CardFooter>
-        </Card>
-      ))}
+                    {/* Fecha límite resaltada */}
+                    <p
+                        className={`text-sm font-medium ${new Date(task.dueDate) < new Date()
+                                ? "text-red-500"
+                                : "text-gray-600"
+                            }`}
+                    >
+                        <strong>Fecha límite:</strong> {handleDateFormated(task.dueDate)}
+                    </p>
 
-      {/* Mostrar el popup de edición cuando se selecciona una tarea */}
-      {selectedTask && (
-        <EditTaskPopup
-          open={Boolean(selectedTask)}
-          task={selectedTask}
-          onClose={() => setSelectedTask(null)} // Cerrar el popup
-          onTaskUpdated={refetch} // Recargar la página al actualizar
-        />
-      )}
+                    {task.assignee && (
+                        <p className="text-sm text-gray-600">
+                            <strong>Asignado a:</strong> {task.assignee.name}
+                        </p>
+                    )}
+                </div>
 
-      {/* Mostrar el popup de eliminación */}
-      {selectedTaskDelete && (
-        <DeleteTaskPopup
-          open={Boolean(selectedTaskDelete)}
-          taskId={selectedTaskDelete.id}
-          taskTitle={selectedTaskDelete.title}
-          onClose={handleClosePopup} // Cerrar el popup
-          onTaskDeleted={handleTaskDeleted} // Acción después de la eliminación
-        />
-      )}
-    </div>
-  );
-};
+                <CardFooter className="bg-gray-50 p-4 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
+                    <div className="text-xs text-gray-500">
+                        <p>Creado: {handleDateFormated(task.createdAt)}</p>
+                        <p>Actualizado: {handleDateFormated(task.updatedAt)}</p>
+                    </div>
 
-export default TaskCard;
+                    <div className="flex space-x-4">
+                        {/* Botón para abrir el popup de eliminación */}
+                        <Button
+                            className="flex items-center justify-center p-3 rounded-md border border-red-500 bg-red-50 hover:bg-red-100"
+                            onClick={() => setOpenDelete(true)}
+                        >
+                            <FaTrashAlt className="text-red-500 w-5 h-5" />
+                        </Button>
+
+                        {/* Botón para abrir el popup de edición */}
+                        <Button
+                            className="flex items-center justify-center p-3 rounded-md border border-blue-500 bg-blue-50 hover:bg-blue-100"
+                            onClick={() => setOpenEdit(true)}
+                        >
+                            <FaPenSquare className="text-blue-500 w-5 h-5" />
+                        </Button>
+                    </div>
+                </CardFooter>
+            </Card>
+
+            <DeleteTaskPopup open={openDelete} setOpen={setOpenDelete} task={task} onTaskDeleted={refetch} />
+            <EditTaskPopup open={openEdit} setOpen={setOpenEdit} task={task} onTaskUpdated={refetch} />
+        </div>
+    )
+}

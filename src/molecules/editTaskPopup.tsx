@@ -4,49 +4,57 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutation } from "@apollo/client";
-import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks"; 
+import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks";
 import { Task, TaskStatus } from "@/types/tasks";
+import { Dialog } from "@mui/material";
+import { handleShowStatus } from "@/utils/helpers";
 
 interface EditTaskPopupProps {
   open: boolean;
   task: Task;
-  onClose: () => void;
+  setOpen: (open: boolean) => void;
   onTaskUpdated: () => void;
 }
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   open,
   task: { id, title, description, status, dueDate },
-  onClose,
+  setOpen,
   onTaskUpdated,
 }) => {
-  const formattedDueDate = dueDate && !isNaN(new Date(dueDate).getTime())
-    ? new Date(dueDate).toISOString().slice(0, 16)
-    : "";
 
-  const [newTitle, setNewTitle] = useState(title || "");
-  const [newDescription, setNewDescription] = useState(description || "");
-  const [newStatus, setNewStatus] = useState(status || "PENDING");
-  const [newDueDate, setNewDueDate] = useState(formattedDueDate);
 
   const [updateTask, { loading, error }] = useMutation(UPDATE_TASK);
 
+  const possobleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
+
+  //remove the current status from the possible status
+  const statusIndex = possobleStatus.indexOf(status);
+  possobleStatus.splice(statusIndex, 1);
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    const { newTitle, newDescription, newStatus, newDueDate } = data;
+
 
     try {
       const { data } = await updateTask({
         variables: {
           id,
-          title: newTitle,
-          description: newDescription,
-          status: newStatus,
-          dueDate: newDueDate || null,
+          title: newTitle as string,
+          description: newDescription as string,
+          status: newStatus as TaskStatus,
+          dueDate: new Date(newDueDate as string),
         },
       });
 
       onTaskUpdated();
-      onClose();
+      setOpen(false);
       console.log("Tarea actualizada:", data.updateTask);
     } catch (err) {
       console.error("Error al actualizar tarea:", err);
@@ -56,54 +64,53 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+    <Dialog
+    open={open}
+    onClose={() => setOpen(false)}
+    >
       <div className="bg-white p-8 rounded-lg w-96">
         <h2 className="text-2xl font-bold mb-4">Editar Tarea</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Título</Label>
             <Input
-              id="title"
-              name="title"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-            />
+              id="newTitle"
+              name="newTitle"
+              defaultValue={title} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Descripción</Label>
             <Textarea
-              id="description"
-              name="description"
-              value={newDescription}
-              onChange={(e) => setNewDescription(e.target.value)}
-            />
+              id="newDescription"
+              name="newDescription"
+              defaultValue={description} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="status">Estado</Label>
             <select
-              id="status"
-              name="status"
-              value={newStatus}
-              onChange={(e) => setNewStatus(e.target.value as TaskStatus)}
+              id="newStatus"
+              name="newStatus"
               className="w-full p-2 border rounded"
             >
-              <option value="PENDING">Por hacer</option>
-              <option value="IN_PROGRESS">En progreso</option>
-              <option value="COMPLETED">Hecho</option>
+              <option value={status}>{handleShowStatus(status)}</option>
+              {possobleStatus.map((status) => (
+                <option key={status} value={status}>
+                  {handleShowStatus(status as TaskStatus)}
+                </option>
+              ))}
             </select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="dueDate">Fecha de vencimiento</Label>
             <Input
-              id="dueDate"
+              id="newDueDate"
               type="datetime-local"
-              name="dueDate"
-              value={newDueDate}
-              onChange={(e) => setNewDueDate(e.target.value)}
+              name="newDueDate"
+              defaultValue={dueDate}
             />
           </div>
           <div className="flex justify-between mt-4">
-            <Button type="button" onClick={onClose} className="bg-gray-300">
+            <Button type="button" onClick={() => setOpen(false)} className="bg-gray-300">
               Cancelar
             </Button>
             <Button type="submit" disabled={loading}>
@@ -113,7 +120,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
         </form>
         {error && <p className="text-red-500 mt-2">{error.message}</p>}
       </div>
-    </div>
+    </Dialog>
   );
 };
 

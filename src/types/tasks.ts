@@ -17,7 +17,7 @@ export interface Task {
 export enum TaskStatus {
     PENDING = "PENDING",
     IN_PROGRESS = "IN_PROGRESS",
-    DONE = "DONE"
+    COMPLETED = "COMPLETED"
 }
 
 export interface TaskByProject {
