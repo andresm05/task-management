@@ -1,11 +1,8 @@
 import AdminLayout from "@/layouts/_layout";
 import useMiddleware from "@/hooks/useMiddleware";
-import { useQuery } from '@apollo/client';
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 import IsLoading from "@/molecules/isLoading";
 import {Role} from "@/utils/enums";
 import { ProjectData } from "@/molecules/ProjectData";
@@ -13,7 +10,6 @@ import { ProjectData } from "@/molecules/ProjectData";
 export default function AdminPage() {
     const user = useMiddleware(Role.USER);
 
-    const router = useRouter();
 
     if (!user) {
         return <IsLoading/>;
