@@ -12,7 +12,7 @@ import ProjectCreationForm from "@/molecules/ProjectCreationForm";
 
 const CreateItemPage: React.FC = () => {
 
-    const user = useMiddleware(Role.USER);
+    const user = useMiddleware(Role.ADMIN);
     const router = useRouter();
 
     const handleBack = (event: any) => {

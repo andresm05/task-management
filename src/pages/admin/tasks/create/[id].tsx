@@ -7,9 +7,14 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { TaskStatus } from '@/types/tasks';
 import { GET_ALL_USERS_QUERY } from '@/utils/graphql/queries/users';
-import { AllUsers } from '@/types/users';
+import { AllUsers, Role } from '@/types/users';
+import useMiddleware from '@/hooks/useMiddleware';
+import AdminLayout from '@/layouts/_layout';
+import IsLoading from '@/molecules/isLoading';
 
 const CreateTaskPage: React.FC = () => {
+
+  const user = useMiddleware(Role.ADMIN);
   const router = useRouter();
   const { id } = router.query; // Obtener el id del proyecto de los parámetros de la URL
 
@@ -52,85 +57,94 @@ const CreateTaskPage: React.FC = () => {
     }
   };
 
+  if (!user) {
+    return <IsLoading />;
+  }
+
   return (
-    <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Nueva Tarea</h1>
+    <AdminLayout user={user}>
+      <div className="max-w-4xl mx-auto p-6">
+        <h1 className="text-3xl font-bold text-center mb-6">Nueva Tarea</h1>
 
-      {/* Formulario */}
-      <form onSubmit={handleSubmit} className="space-y-8 bg-slate-100 p-6 rounded-lg shadow-md">
-        <div className="space-y-3">
-          <Label htmlFor="title" className="text-sm font-medium text-gray-700">
-            Título de la tarea
-          </Label>
-          <Input
-            id="title"
-            type="text"
-            name="title"
-            placeholder="Ingresa el título"
-            required
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-        </div>
+        {/* Formulario */}
+        <form onSubmit={handleSubmit}>
+          <div className='flex flex-col w-full items-center'>
 
-        <div className="space-y-3">
-          <Label htmlFor="assignee" className="text-sm font-medium text-gray-700">
-            Responsable
-          </Label>
-          <select
-            name="assignee"
-            id="assignee"
-            required
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
-          >
-            <option value="">Seleccionar Responsable</option>
-            {users.map((user) => (
-              <option key={user.id} value={user.id}>
-                {user.name}
-              </option>
-            ))}
-          </select>
-        </div>
+          <div className="space-y-3 w-1/2">
+            <Label htmlFor="title" className="text-sm font-medium">
+              Título de la tarea
+            </Label>
+            <Input
+              id="title"
+              type="text"
+              name="title"
+              placeholder="Ingresa el título"
+              required
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
 
-        <div className="space-y-3">
-          <Label htmlFor="description" className="text-sm font-medium text-gray-700">
-            Descripción
-          </Label>
-          <Textarea
-            id="description"
-            placeholder="Añadir una descripción"
-            name="description"
-            rows={4}
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
-        </div>
+          <div className="space-y-3 w-1/2">
+            <Label htmlFor="assignee" className="text-sm font-medium ">
+              Responsable
+            </Label>
+            <select
+              name="assignee"
+              id="assignee"
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
+            >
+              <option value="">Seleccionar Responsable</option>
+              {users.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div className="space-y-3">
-          <Label htmlFor="dueDate" className="text-sm font-medium text-gray-700">
-            Fecha de vencimiento
-          </Label>
-          <Input
-            id="dueDate"
-            type="datetime-local"
-            name="dueDate"
-            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
-          />
-        </div>
+          <div className="space-y-3 w-1/2">
+            <Label htmlFor="description" className="text-sm font-medium">
+              Descripción
+            </Label>
+            <Textarea
+              id="description"
+              placeholder="Añadir una descripción"
+              name="description"
+              rows={4}
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            />
+          </div>
 
-        <div className="flex mt-8 w-full justify-center">
-          <Button
-            type="submit"
-            disabled={loading}
-            className={`w-fit py-3 rounded-lg text-white font-semibold ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
-              }`}
-          >
-            {loading ? "Creando tarea..." : "Crear tarea"}
-          </Button>
-        </div>
-      </form>
+          <div className="space-y-3 w-1/2">
+            <Label htmlFor="dueDate" className="text-sm font-medium">
+              Fecha de vencimiento
+            </Label>
+            <Input
+              id="dueDate"
+              type="datetime-local"
+              name="dueDate"
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none "
+            />
+          </div>
+
+          <div className="flex mt-8 justify-center w-1/2">
+            <Button
+              type="submit"
+              disabled={loading}
+              className={`w-fit py-3 rounded-lg text-white font-semibold ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+                }`}
+            >
+              {loading ? "Creando tarea..." : "Crear tarea"}
+            </Button>
+          </div>
+          </div>
+        </form>
 
 
-      {error && <p className="text-red-500 text-center mt-4">{error.message}</p>}
-    </div>
+        {error && <p className="text-red-500 text-center mt-4">{error.message}</p>}
+      </div>
+    </AdminLayout>
   );
 };
 
