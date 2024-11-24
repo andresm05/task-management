@@ -54,24 +54,34 @@ const CreateTaskPage: React.FC = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <h1 className="text-3xl font-bold text-center mb-6">Crear Tarea</h1>
+      <h1 className="text-3xl font-bold text-center mb-6">Nueva Tarea</h1>
 
       {/* Formulario */}
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div className="space-y-2">
-          <Label htmlFor="title">Título de la tarea</Label>
+      <form onSubmit={handleSubmit} className="space-y-8 bg-slate-100 p-6 rounded-lg shadow-md">
+        <div className="space-y-3">
+          <Label htmlFor="title" className="text-sm font-medium text-gray-700">
+            Título de la tarea
+          </Label>
           <Input
             id="title"
             type="text"
-            name='title'
+            name="title"
             placeholder="Ingresa el título"
             required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        <div>
-          <select name="assignee" id="assignee" required
-            className="w-full p-2 border border-gray-300 rounded-md">
+        <div className="space-y-3">
+          <Label htmlFor="assignee" className="text-sm font-medium text-gray-700">
+            Responsable
+          </Label>
+          <select
+            name="assignee"
+            id="assignee"
+            required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
+          >
             <option value="">Seleccionar Responsable</option>
             {users.map((user) => (
               <option key={user.id} value={user.id}>
@@ -81,31 +91,43 @@ const CreateTaskPage: React.FC = () => {
           </select>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="description">Descripción</Label>
+        <div className="space-y-3">
+          <Label htmlFor="description" className="text-sm font-medium text-gray-700">
+            Descripción
+          </Label>
           <Textarea
             id="description"
             placeholder="Añadir una descripción"
-            name='description'
+            name="description"
             rows={4}
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="dueDate">Fecha de vencimiento</Label>
+        <div className="space-y-3">
+          <Label htmlFor="dueDate" className="text-sm font-medium text-gray-700">
+            Fecha de vencimiento
+          </Label>
           <Input
             id="dueDate"
             type="datetime-local"
-            name='dueDate'
+            name="dueDate"
+            className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
           />
         </div>
 
-        <div className="mt-6">
-          <Button type="submit" disabled={loading} className="w-full">
-            {loading ? 'Creando tarea...' : 'Crear tarea'}
+        <div className="flex mt-8 w-full justify-center">
+          <Button
+            type="submit"
+            disabled={loading}
+            className={`w-fit py-3 rounded-lg text-white font-semibold ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+              }`}
+          >
+            {loading ? "Creando tarea..." : "Crear tarea"}
           </Button>
         </div>
       </form>
+
 
       {error && <p className="text-red-500 text-center mt-4">{error.message}</p>}
     </div>

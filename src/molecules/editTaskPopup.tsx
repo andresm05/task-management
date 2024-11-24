@@ -1,13 +1,16 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { UPDATE_TASK } from "@/utils/graphql/mutations/tasks";
 import { Task, TaskStatus } from "@/types/tasks";
 import { Dialog } from "@mui/material";
 import { handleShowStatus } from "@/utils/helpers";
+import useMiddleware from "@/hooks/useMiddleware";
+import { AllUsers, Role } from "@/types/users";
+import { GET_ALL_USERS_QUERY } from "@/utils/graphql/queries/users";
 
 interface EditTaskPopupProps {
   open: boolean;
@@ -18,19 +21,42 @@ interface EditTaskPopupProps {
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   open,
-  task: { id, title, description, status, dueDate },
+  task: { id, title, description, status, dueDate, assignee },
   setOpen,
   onTaskUpdated,
 }) => {
 
-
+  const user = useMiddleware(Role.USER);
   const [updateTask, { loading, error }] = useMutation(UPDATE_TASK);
+  const { data } = useQuery<AllUsers>(GET_ALL_USERS_QUERY);
+  const users = data?.users || [];
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const possobleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
 
+  const formatDueDate = (timestamp: string): string => {
+    const date = new Date(parseInt(timestamp, 10)); // Asegúrate de convertir el string a número
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Meses van de 0 a 11
+    const day = String(date.getDate()).padStart(2, "0");
+    const hours = String(date.getHours()).padStart(2, "0");
+    const minutes = String(date.getMinutes()).padStart(2, "0");
+
+    return `${year}-${month}-${day}T${hours}:${minutes}`; // Formato requerido
+  };
+
+  useEffect(() => {
+    if (user?.role === Role.ADMIN) {
+      setIsAdmin(true);
+    }
+  }, [user]);
+
   //remove the current status from the possible status
-  const statusIndex = possobleStatus.indexOf(status);
-  possobleStatus.splice(statusIndex, 1);
+  const filteredStatus = possobleStatus.filter((s) => s !== status);
+
+
+  //remove the current assignee from the possible assignees
+  const filteredUsers = users.filter((u) => u.id !== assignee.id.toString());
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,7 +65,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    const { newTitle, newDescription, newStatus, newDueDate } = data;
+    const { newTitle, newDescription, newStatus, newDueDate, assignee } = data;
 
 
     try {
@@ -50,6 +76,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
           description: newDescription as string,
           status: newStatus as TaskStatus,
           dueDate: new Date(newDueDate as string),
+          assigneeId: assignee,
         },
       });
 
@@ -65,8 +92,8 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
 
   return (
     <Dialog
-    open={open}
-    onClose={() => setOpen(false)}
+      open={open}
+      onClose={() => setOpen(false)}
     >
       <div className="bg-white p-8 rounded-lg w-96">
         <h2 className="text-2xl font-bold mb-4">Editar Tarea</h2>
@@ -76,14 +103,33 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
             <Input
               id="newTitle"
               name="newTitle"
-              defaultValue={title} />
+              defaultValue={title}
+              disabled={!isAdmin} />
           </div>
           <div className="space-y-2">
             <Label htmlFor="description">Descripción</Label>
             <Textarea
               id="newDescription"
               name="newDescription"
-              defaultValue={description} />
+              defaultValue={description}
+              disabled={!isAdmin}
+            />
+          </div>
+          <div className="space-y-2">
+            <select
+              name="assignee"
+              id="assignee"
+              required
+              className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
+              disabled={!isAdmin}
+            >
+              <option value={assignee.id}>{assignee.name}</option>
+              {filteredUsers.map((user) => (
+                <option key={user.id} value={user.id}>
+                  {user.name}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="space-y-2">
             <Label htmlFor="status">Estado</Label>
@@ -93,7 +139,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
               className="w-full p-2 border rounded"
             >
               <option value={status}>{handleShowStatus(status)}</option>
-              {possobleStatus.map((status) => (
+              {filteredStatus.map((status) => (
                 <option key={status} value={status}>
                   {handleShowStatus(status as TaskStatus)}
                 </option>
@@ -106,7 +152,8 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
               id="newDueDate"
               type="datetime-local"
               name="newDueDate"
-              defaultValue={dueDate}
+              defaultValue={formatDueDate(dueDate)}
+              disabled={!isAdmin}
             />
           </div>
           <div className="flex justify-between mt-4">

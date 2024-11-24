@@ -50,7 +50,11 @@ export const resolvers = {
         },
         projects: async () => {
             return prisma.project.findMany({
-                include: { tasks: true, owner: true },
+                include: { tasks: {
+                    include: {
+                        assignee: true,
+                    },
+                }, owner: true },
             });
         },
         project: async (parent: unknown, { id }: { id: string }) => {

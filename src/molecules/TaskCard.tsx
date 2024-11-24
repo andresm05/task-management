@@ -1,11 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import { Task } from "@/types/tasks";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
 import DeleteTaskPopup from "./DeleteTaskPopup";
 import EditTaskPopup from "./EditTaskPopup";
 import { handleShowStatus } from "@/utils/helpers";
+import useMiddleware from "@/hooks/useMiddleware";
+import { Role } from "@/types/users";
 
 interface TaskCardProps {
     task: Task;
@@ -17,8 +19,17 @@ export const TaskCard: React.FC<TaskCardProps> = ({
     refetch
 }) => {
 
+    const user = useMiddleware(Role.USER);
+    const [isAdmin, setIsAdmin] = useState(false);
     const [openDelete, setOpenDelete] = useState(false);
     const [openEdit, setOpenEdit] = useState(false);
+
+    // Verificar si el usuario es administrador
+    useEffect(() => {
+        if (user?.role === Role.ADMIN) {
+            setIsAdmin(true);
+        }
+    }, [user]);
 
 
     const handleDateFormated = (timestamp: string): string => {
@@ -53,12 +64,12 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                     {/* Estado con estilos dinámicos */}
                     <p
                         className={`text-sm font-semibold py-1 px-2 rounded-lg inline-block ${task.status === "PENDING"
-                                ? "bg-yellow-100 text-yellow-800"
-                                : task.status === "IN_PROGRESS"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : task.status === "COMPLETED"
-                                        ? "bg-green-100 text-green-800"
-                                        : "bg-gray-100 text-gray-800"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : task.status === "IN_PROGRESS"
+                                ? "bg-blue-100 text-blue-800"
+                                : task.status === "COMPLETED"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-100 text-gray-800"
                             }`}
                     >
                         Estado: {handleShowStatus(task.status)}
@@ -66,9 +77,9 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
                     {/* Fecha límite resaltada */}
                     <p
-                        className={`text-sm font-medium ${new Date(task.dueDate) < new Date()
-                                ? "text-red-500"
-                                : "text-gray-600"
+                        className={`text-sm font-medium ${new Date(parseInt(task.dueDate, 10)) < new Date() && task.status !== "COMPLETED"
+                            ? "text-red-500"
+                            : "text-gray-600"
                             }`}
                     >
                         <strong>Fecha límite:</strong> {handleDateFormated(task.dueDate)}
@@ -90,7 +101,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                     <div className="flex space-x-4">
                         {/* Botón para abrir el popup de eliminación */}
                         <Button
-                            className="flex items-center justify-center p-3 rounded-md border border-red-500 bg-red-50 hover:bg-red-100"
+                            className={` ${!isAdmin ? 'hidden' : 'flex items-center justify-center p-3 rounded-md border border-red-500 bg-red-50 hover:bg-red-100 '}`}
                             onClick={() => setOpenDelete(true)}
                         >
                             <FaTrashAlt className="text-red-500 w-5 h-5" />
@@ -98,7 +109,7 @@ export const TaskCard: React.FC<TaskCardProps> = ({
 
                         {/* Botón para abrir el popup de edición */}
                         <Button
-                            className="flex items-center justify-center p-3 rounded-md border border-blue-500 bg-blue-50 hover:bg-blue-100"
+                            className={' flex items-center justify-center p-3 rounded-md border border-blue-500 bg-blue-50 hover:bg-blue-100 '}
                             onClick={() => setOpenEdit(true)}
                         >
                             <FaPenSquare className="text-blue-500 w-5 h-5" />
