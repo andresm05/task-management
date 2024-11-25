@@ -32,7 +32,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   const users = data?.users || [];
   const [isAdmin, setIsAdmin] = useState(false);
 
-  const possobleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
+  const possibleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
 
   const formatDueDate = (timestamp: string): string => {
     const date = new Date(parseInt(timestamp, 10)); // Asegúrate de convertir el string a número
@@ -52,11 +52,14 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   }, [user]);
 
   //remove the current status from the possible status
-  const filteredStatus = possobleStatus.filter((s) => s !== status);
-
-
+  const filteredStatus = possibleStatus.filter((s) => s !== status);
+console.log("#############")
+console.log(assignee)
+console.log(users)
   //remove the current assignee from the possible assignees
-  const filteredUsers = users.filter((u) => u.id !== assignee.id.toString());
+  if (!assignee) return null;
+
+  const filteredUsers = users.filter((u) => u.id !== assignee.id);
 
 
   const handleSubmit = async (e: React.FormEvent) => {

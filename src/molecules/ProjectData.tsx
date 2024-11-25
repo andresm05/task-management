@@ -7,7 +7,7 @@ import { ProjectCard } from "./ProjectCard";
 import { useEffect, useState } from "react";
 
 export const ProjectData = () => {
-  const { data } = useQuery<GetProjects>(GET_PROJECTS);
+  const { data, error, loading, refetch } = useQuery<GetProjects>(GET_PROJECTS);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const projects = data?.projects || [];
 
@@ -26,19 +26,23 @@ export const ProjectData = () => {
 
   }, [data]);
 
+  if (loading) return <p>Cargando Proyectos...</p>;
+  if (error) return <p>Error al cargar proyectos: {error.message}</p>;
+
+  
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {user?.role === Role.USER && (
         <>
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project} refetch={refetch}/>
           ))}
         </>
       )}
       {user?.role === Role.ADMIN && (
         <>
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} />
+            <ProjectCard key={project.id} project={project} refetch={refetch}/>
           ))}
         </>
       )}

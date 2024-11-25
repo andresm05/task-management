@@ -29,7 +29,7 @@ const DeleteTaskPopup: React.FC<DeleteTaskPopupProps> = ({ open, task, onTaskDel
   };
 
   return (
-    <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
+    <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth disableEnforceFocus>
       <DialogTitle>Eliminar Tarea</DialogTitle>
       <DialogContent>
         <Typography>
