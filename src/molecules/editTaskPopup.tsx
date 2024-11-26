@@ -11,6 +11,9 @@ import { handleShowStatus } from "@/utils/helpers";
 import useMiddleware from "@/hooks/useMiddleware";
 import { AllUsers, Role } from "@/types/users";
 import { GET_ALL_USERS_QUERY } from "@/utils/graphql/queries/users";
+import IsLoading from "./isLoading";
+import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
+import router, { useRouter } from 'next/router';
 
 interface EditTaskPopupProps {
   open: boolean;
@@ -27,12 +30,29 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
 }) => {
 
   const user = useMiddleware(Role.USER);
-  const [updateTask, { loading, error }] = useMutation(UPDATE_TASK);
-  const { data } = useQuery<AllUsers>(GET_ALL_USERS_QUERY);
+  const [updateTask, {loading, error}] = useMutation(UPDATE_TASK, {
+    update(cache, { data: { updateTask } }) {
+      cache.modify({
+        fields: {
+          tasks(existingTasks = []) {
+            return existingTasks.map((task: Task) =>
+              task.id === updateTask.id ? updateTask : task
+            );
+          },
+        },
+      });
+    },
+  });
+  
+  const { data, loading:loadingUsers } = useQuery<AllUsers>(GET_ALL_USERS_QUERY);
+  const router = useRouter();
+  const { id: projectId } = router.query;
   const users = data?.users || [];
   const [isAdmin, setIsAdmin] = useState(false);
 
   const possibleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
+
+  const filteredUsers = users.filter((user) => user.id !== assignee.id);
 
   const formatDueDate = (timestamp: string): string => {
     const date = new Date(parseInt(timestamp, 10)); // Asegúrate de convertir el string a número
@@ -51,15 +71,10 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
     }
   }, [user]);
 
+  if(loadingUsers) return <IsLoading />;
+
   //remove the current status from the possible status
   const filteredStatus = possibleStatus.filter((s) => s !== status);
-console.log("#############")
-console.log(assignee)
-console.log(users)
-  //remove the current assignee from the possible assignees
-  if (!assignee) return null;
-
-  const filteredUsers = users.filter((u) => u.id !== assignee.id);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,7 +83,8 @@ console.log(users)
     const form = e.target as HTMLFormElement;
     const formData = new FormData(form);
     const data = Object.fromEntries(formData.entries());
-    const { newTitle, newDescription, newStatus, newDueDate, assignee } = data;
+    const { newTitle, newDescription, newStatus, newDueDate, newAssignee } = data;
+          setOpen(false);
 
 
     try {
@@ -79,19 +95,23 @@ console.log(users)
           description: newDescription as string,
           status: newStatus as TaskStatus,
           dueDate: new Date(newDueDate as string),
-          assigneeId: assignee,
+          assigneeId:  newAssignee ? parseInt(newAssignee as string) : null,
         },
+        refetchQueries: [
+          {
+            query: GET_TASKS_BY_PROJECT,
+            variables: { projectId },
+          },
+        ],
+        awaitRefetchQueries: true,
       });
-
-      onTaskUpdated();
-      setOpen(false);
+      //onTaskUpdated();
       console.log("Tarea actualizada:", data.updateTask);
     } catch (err) {
       console.error("Error al actualizar tarea:", err);
     }
   };
 
-  if (!open) return null;
 
   return (
     <Dialog
@@ -120,8 +140,8 @@ console.log(users)
           </div>
           <div className="space-y-2">
             <select
-              name="assignee"
-              id="assignee"
+              name="newAssignee"
+              id="newAssignee"
               required
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               disabled={!isAdmin}

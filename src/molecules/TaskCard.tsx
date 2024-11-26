@@ -4,7 +4,7 @@ import { Task } from "@/types/tasks";
 import { useEffect, useState } from "react";
 import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
 import DeleteTaskPopup from "./DeleteTaskPopup";
-import EditTaskPopup from "./editTaskPopup";
+import EditTaskPopup from "./EditTaskPopup";
 import { handleShowStatus } from "@/utils/helpers";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/types/users";

@@ -232,6 +232,7 @@ export const resolvers = {
                     ...(dueDate && { dueDate: new Date(dueDate) }),
                     ...(assigneeId && { assigneeId: Number(assigneeId) }),
                 },
+                include: { assignee: true },
             });
         },
     },
