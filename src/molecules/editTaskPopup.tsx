@@ -192,4 +192,3 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
 };
 
 export default EditTaskPopup;
-
