@@ -5,19 +5,18 @@ import { Button } from "@/components/ui/button";
 import { useMutation } from "@apollo/client";
 import { UPDATE_PROJECT } from "@/utils/graphql/mutations/project";
 import { Project } from "@/types/projects";
+import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
 
 interface EditProjectPopupProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   project: Project;
-  onTaskUpdated: () => void;
 }
 
 const EditProjectPopup: React.FC<EditProjectPopupProps> = ({
   open,
   setOpen,
   project,
-  onTaskUpdated,
 }) => {
   const [formData, setFormData] = useState({
     name: project.name || "",
@@ -25,13 +24,10 @@ const EditProjectPopup: React.FC<EditProjectPopupProps> = ({
   });
 
   const [updateProject, { loading }] = useMutation(UPDATE_PROJECT, {
-    onCompleted: () => {
-      onTaskUpdated();
-      setOpen(false);
-    },
-    onError: (error) => {
-      console.error("Error updating project:", error.message);
-    },
+    refetchQueries: [{
+      query: GET_PROJECTS
+    }],
+    awaitRefetchQueries: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,14 +35,17 @@ const EditProjectPopup: React.FC<EditProjectPopupProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
-    updateProject({
+  const handleSave = async() => {
+    const {data, errors} = await updateProject({
       variables: {
         id: project.id,
         name: formData.name,
         description: formData.description,
       },
     });
+
+    setOpen(false);
+
   };
 
   return (

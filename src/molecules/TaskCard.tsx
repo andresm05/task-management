@@ -3,8 +3,8 @@ import { Card, CardFooter, CardHeader } from "@/components/ui/card"
 import { Task } from "@/types/tasks";
 import { useEffect, useState } from "react";
 import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
-import DeleteTaskPopup from "./DeleteTaskPopup";
-import EditTaskPopup from "./EditTaskPopup";
+import DeleteTaskPopup from "./deleteTaskPopup";
+import EditTaskPopup from "./editTaskPopup";
 import { handleShowStatus } from "@/utils/helpers";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/types/users";
@@ -118,8 +118,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 </CardFooter>
             </Card>
 
-            <DeleteTaskPopup open={openDelete} setOpen={setOpenDelete} task={task} onTaskDeleted={refetch} />
-            <EditTaskPopup open={openEdit} setOpen={setOpenEdit} task={task} onTaskUpdated={refetch} />
+            <DeleteTaskPopup open={openDelete} setOpen={setOpenDelete} task={task}/>
+            <EditTaskPopup open={openEdit} setOpen={setOpenEdit} task={task} />
         </div>
     )
 }
