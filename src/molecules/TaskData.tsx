@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import React, { useEffect, useState } from "react";
 
 import { Task, TaskByProject } from "@/types/tasks";
-import { TaskCard } from "./TaskCard";
+import { TaskCard } from "./taskCard";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/types/users";
 
