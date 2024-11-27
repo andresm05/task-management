@@ -5,7 +5,7 @@ import { Plus } from "lucide-react";
 import Link from "next/link";
 import IsLoading from "@/molecules/isLoading";
 import {Role} from "@/utils/enums";
-import { ProjectData } from "@/molecules/ProjectData";
+import { ProjectData } from "@/molecules/projectData";
 
 export default function AdminPage() {
     const user = useMiddleware(Role.USER);

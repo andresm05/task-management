@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import IsLoading from "@/molecules/isLoading";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/utils/enums";
-import ProjectCreationForm from "@/molecules/ProjectCreationForm";
+import ProjectCreationForm from "@/molecules/projectCreationForm";
 
 
 const CreateItemPage: React.FC = () => {

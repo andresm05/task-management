@@ -11,12 +11,10 @@ import { Role } from "@/types/users";
 
 interface TaskCardProps {
     task: Task;
-    refetch: () => void;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({
     task,
-    refetch
 }) => {
 
     const user = useMiddleware(Role.USER);
