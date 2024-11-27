@@ -5,21 +5,22 @@ import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
 import { useQuery } from "@apollo/client";
 import { ProjectCard } from "./projectCard";
 import { useEffect, useState } from "react";
+import IsLoading from "./isLoading";
 
 export const ProjectData = () => {
-  const { data, error, loading, refetch } = useQuery<GetProjects>(GET_PROJECTS);
+  const { data, error, loading } = useQuery<GetProjects>(GET_PROJECTS);
   const [filteredProjects, setFilteredProjects] = useState<Project[]>([]);
   const projects = data?.projects || [];
 
   const user = useMiddleware(Role.USER);
 
   useEffect(() => {
-    if (user?.role === Role.USER) {
+    if (user?.role === Role.USER && data?.projects) {
       const userProjects = projects.filter((project) =>
         project.tasks.some((task) => task.assignee?.id === user.id)
       );
       console.log(projects);
-      console.log(userProjects);
+      console.log('userprojects', userProjects);
       setFilteredProjects(userProjects);
     }
     console.log(projects);
@@ -29,20 +30,23 @@ export const ProjectData = () => {
   if (loading) return <p>Cargando Proyectos...</p>;
   if (error) return <p>Error al cargar proyectos: {error.message}</p>;
 
-  
+  if(!user || !projects) {
+    return <IsLoading />
+  }
+
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {user?.role === Role.USER && (
         <>
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project}/>
+            <ProjectCard key={project.id} project={project} />
           ))}
         </>
       )}
       {user?.role === Role.ADMIN && (
         <>
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project}/>
+            <ProjectCard key={project.id} project={project} />
           ))}
         </>
       )}

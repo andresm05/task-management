@@ -16,7 +16,7 @@ const TaskData: React.FC<TaskDataProps> = ({ id }) => {
   const [filteredTasks, setFilteredTasks] = useState<Task[]>([]);
 
   // Consulta GraphQL para obtener las tareas del proyecto
-  const { data, loading, error, refetch } = useQuery<TaskByProject>(GET_TASKS_BY_PROJECT, {
+  const { data, loading, error } = useQuery<TaskByProject>(GET_TASKS_BY_PROJECT, {
     variables: { projectId: id },
   });
 

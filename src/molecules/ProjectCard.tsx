@@ -15,7 +15,7 @@ interface ProjectCardProps {
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
-  
+
 }) => {
   const user = useMiddleware(Role.USER);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -44,7 +44,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             <h2 className="text-2xl font-semibold text-gray-800 w-4/5">
               {project.name}
             </h2>
-            
+
             <Link
               href={{
                 pathname: "/admin/tasks/[id]",
@@ -83,11 +83,10 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
           <div className="flex space-x-4">
             {/* Botón para abrir el popup de eliminación */}
             <Button
-              className={` ${
-                !isAdmin
+              className={` ${!isAdmin
                   ? "hidden"
                   : "flex items-center justify-center p-3 rounded-md border border-red-500 bg-red-50 hover:bg-red-100 "
-              }`}
+                }`}
               onClick={() => setOpenDelete(true)}
             >
               <FaTrashAlt className="text-red-500 w-5 h-5" />
@@ -95,8 +94,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
             {/* Botón para abrir el popup de edición */}
             <Button
-              className={
-                " flex items-center justify-center p-3 rounded-md border border-blue-500 bg-blue-50 hover:bg-blue-100 "
+              className={` ${!isAdmin ? "hidden" : " flex items-center justify-center p-3 rounded-md border border-blue-500 bg-blue-50 hover:bg-blue-100 "
+                }`
               }
               onClick={() => setOpenEdit(true)}
             >

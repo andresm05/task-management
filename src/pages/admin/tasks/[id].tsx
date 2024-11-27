@@ -29,7 +29,7 @@ const TasksProject = () => {
         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl text-center mb-4">
           Gestión de Proyectos
         </h1>
-        <Button className="m-4" asChild>
+        <Button className={`${user.role === 'ADMIN' ? 'm-4' : 'hidden'}`} asChild>
           <Link href={{ pathname: "/admin/tasks/create/[id]", query: { id: id } }}>
             <Plus /> Agregar una tarea
           </Link>
