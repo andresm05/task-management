@@ -11,12 +11,11 @@ import EditProjectPopup from "./editProjectPopup";
 
 interface ProjectCardProps {
   project: Project;
-  refetch: () => void;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
   project,
-  refetch
+  
 }) => {
   const user = useMiddleware(Role.USER);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -111,13 +110,11 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         open={openDelete}
         setOpen={setOpenDelete}
         project={project}
-        onTaskDeleted={refetch}
       />
       <EditProjectPopup
         open={openEdit}
         setOpen={setOpenEdit}
         project={project}
-        onTaskUpdated={refetch}
       />
     </div>
   );

@@ -35,14 +35,14 @@ export const ProjectData = () => {
       {user?.role === Role.USER && (
         <>
           {filteredProjects.map((project) => (
-            <ProjectCard key={project.id} project={project} refetch={refetch}/>
+            <ProjectCard key={project.id} project={project}/>
           ))}
         </>
       )}
       {user?.role === Role.ADMIN && (
         <>
           {projects.map((project) => (
-            <ProjectCard key={project.id} project={project} refetch={refetch}/>
+            <ProjectCard key={project.id} project={project}/>
           ))}
         </>
       )}

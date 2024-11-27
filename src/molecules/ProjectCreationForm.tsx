@@ -6,27 +6,39 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import router from "next/router";
+import { Alert, Snackbar } from "@mui/material";
+import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
 
 const CreateProjectPage: React.FC = () => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [openInfo, setOpenInfo] = useState(false);
+  const [openError, setOpenError] = useState(false);
   const [createProject, { loading, error, data }] = useMutation(CREATE_PROJECT);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    try {
-      const { data } = await createProject({
-        variables: { name, description },
-      });
-      console.log("Proyecto creado exitosamente:", data.createProject); // Asegúrate de este log
-    } catch (err) {
-      console.error("Error al crear proyecto:", err);
+
+    const { data, errors } = await createProject({
+      variables: {
+        name,
+        description,
+      },
+      refetchQueries: [
+        {
+          query: GET_PROJECTS
+        }
+      ],
+    });
+
+    if (data) {
+      setOpenInfo(true);
     }
 
-    router.push({
-      pathname: `/admin`,
-    });
+    if (errors) {
+      setOpenInfo(true);
+      setOpenError(true);
+    }
   };
 
   return (
@@ -59,7 +71,18 @@ const CreateProjectPage: React.FC = () => {
           </Button>
         </div>
       </form>
-      {error && <p className="text-red-500 mt-2">{error.message}</p>}
+      <Snackbar
+        anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        open={openInfo}
+        autoHideDuration={3000}
+        onClose={() => setOpenInfo(false)}
+        key={"bottomright"}
+      >
+        {openError ? <Alert severity="error"
+          variant="filled">Error al crear el proyecto</Alert> :
+          <Alert severity="success"
+            variant="filled">Proyecto creado exitosamente</Alert>}
+      </Snackbar>
     </div>
   );
 };

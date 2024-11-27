@@ -19,14 +19,12 @@ interface EditTaskPopupProps {
   open: boolean;
   task: Task;
   setOpen: (open: boolean) => void;
-  onTaskUpdated: () => void;
 }
 
 const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
   open,
   task: { id, title, description, status, dueDate, assignee },
   setOpen,
-  onTaskUpdated,
 }) => {
 
   const user = useMiddleware(Role.USER);
@@ -105,7 +103,6 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
         ],
         awaitRefetchQueries: true,
       });
-      //onTaskUpdated();
       console.log("Tarea actualizada:", data.updateTask);
     } catch (err) {
       console.error("Error al actualizar tarea:", err);

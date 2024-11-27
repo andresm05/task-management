@@ -3,29 +3,35 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography }
 import { DELETE_TASK } from "@/utils/graphql/mutations/tasks";
 import { useMutation } from "@apollo/client";
 import { Task } from "@/types/tasks";
+import router, { useRouter } from 'next/router';
+import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
 
 interface DeleteTaskPopupProps {
   open: boolean;
   task: Task;
-  onTaskDeleted: () => void;
   setOpen: (open: boolean) => void;
 }
 
-const DeleteTaskPopup: React.FC<DeleteTaskPopupProps> = ({ open, task, onTaskDeleted, setOpen }) => {
-  const [deleteTask, { loading }] = useMutation(DELETE_TASK, {
+const DeleteTaskPopup: React.FC<DeleteTaskPopupProps> = ({ open, task, setOpen }) => {
+
+  const router = useRouter();
+  const { id } = router.query;
+  const [deleteTask, { loading, data, error }] = useMutation(DELETE_TASK, {
     variables: { id: task.id },
-    onCompleted: () => {
-      onTaskDeleted(); // Llama al callback para actualizar la lista
-      setOpen(false); // Cierra el popup
-    },
-    onError: (error) => {
-      console.error("Error eliminando tarea:", error.message);
-    },
+    refetchQueries: [{
+      query: GET_TASKS_BY_PROJECT,
+      variables: { projectId: id },
+    }],
+    awaitRefetchQueries: true,
   });
 
 
-  const handleDelete = () => {
-    deleteTask();
+  const handleDelete = async () => {
+    await deleteTask();
+
+    setOpen(false);
+
+
   };
 
   return (

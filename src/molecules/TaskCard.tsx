@@ -11,12 +11,10 @@ import { Role } from "@/types/users";
 
 interface TaskCardProps {
     task: Task;
-    refetch: () => void;
 }
 
 export const TaskCard: React.FC<TaskCardProps> = ({
     task,
-    refetch
 }) => {
 
     const user = useMiddleware(Role.USER);
@@ -118,8 +116,8 @@ export const TaskCard: React.FC<TaskCardProps> = ({
                 </CardFooter>
             </Card>
 
-            <DeleteTaskPopup open={openDelete} setOpen={setOpenDelete} task={task} onTaskDeleted={refetch} />
-            <EditTaskPopup open={openEdit} setOpen={setOpenEdit} task={task} onTaskUpdated={refetch} />
+            <DeleteTaskPopup open={openDelete} setOpen={setOpenDelete} task={task}/>
+            <EditTaskPopup open={openEdit} setOpen={setOpenEdit} task={task} />
         </div>
     )
 }
