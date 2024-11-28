@@ -3,7 +3,7 @@ import { GetProjects, Project } from "@/types/projects";
 import { Role } from "@/types/users";
 import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
 import { useQuery } from "@apollo/client";
-import { ProjectCard } from "./projectCard";
+import { ProjectCard } from "@/molecules/projectCard";
 import { useEffect, useState } from "react";
 import IsLoading from "./isLoading";
 
