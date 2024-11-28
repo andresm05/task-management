@@ -7,15 +7,14 @@ import { Icons } from "@/components/ui/icons";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {LOGIN_MUTATION} from "@/utils/graphql/mutations/auth";
-import {useRouter} from "next/router";
-import {toast} from "@/hooks/use-toast";
+import { LOGIN_MUTATION } from "@/utils/graphql/mutations/auth";
+import { useRouter } from "next/router";
+import { toast } from "@/hooks/use-toast";
 
-interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
+export function UserAuthForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false);
-    const [login, { data, error }] = useMutation(LOGIN_MUTATION);
+    const [login] = useMutation(LOGIN_MUTATION);
     const [wrongPassword, setWrongPassword] = React.useState<boolean>(false);
     const router = useRouter();
 
@@ -27,23 +26,23 @@ export function UserAuthForm({ className, ...props }: UserAuthFormProps) {
         const email = formData.get("email") as string;
         const password = formData.get("password") as string;
 
-        try {
-            const result = await login({
-                variables: { email, password },
-            });
+        const { data, errors } = await login({
+            variables: { email, password },
+        });
 
-            if (result.data.login) {
-                localStorage.setItem("token", result.data.login.token);
-                await router.push('/admin');
-            }
-        } catch (err) {
+        if (data.login) {
+            localStorage.setItem("token", data.login.token);
+            await router.push('/admin');
+        }
+        if (errors) {
+
             toast({
-                title: "Erreur",
-                description: "Utilisateur ou mot de passe incorrect",
+                title: "Ocurrió un error",
+                description: "Usuario o contraseña incorrectos",
             });
             setWrongPassword(true);
-
         }
+
 
         setIsLoading(false);
     }

@@ -22,7 +22,7 @@ const EditUserPage: React.FC = () => {
         skip: !id,
     });
 
-    const handleBack = (event: any) => {
+    const handleBack = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         router.back();
     };

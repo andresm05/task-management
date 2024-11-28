@@ -6,8 +6,8 @@ import { FaPenSquare, FaTrashAlt } from "react-icons/fa";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/types/users";
 import { useEffect, useState } from "react";
-import DeleteProjectPopup from "./deleteProjectPopup";
-import EditProjectPopup from "./editProjectPopup";
+import DeleteProjectPopup from  "@/molecules/deleteProjectPopup";
+import EditProjectPopup from "@/molecules/editProjectPopup";
 
 interface ProjectCardProps {
   project: Project;

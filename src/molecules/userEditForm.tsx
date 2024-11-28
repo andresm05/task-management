@@ -12,15 +12,15 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {Check, Plus} from "lucide-react";
+import { Check } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_MUTATION } from "@/utils/graphql/mutations/users";
 import { useRouter } from "next/router";
-import { Role, UserProps } from "@/utils/enums";
-import {Icons} from "@/components/ui/icons";
+import { UserProps } from "@/utils/enums";
+import { Icons } from "@/components/ui/icons";
 
 const FormSchema = z.object({
     name: z.string().nonempty({
@@ -55,17 +55,17 @@ export const UserEditForm: React.FC<UserEditFormProps> = ({ user }) => {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-        try {
-            setLoading(true);
-            await updateUser({
-                variables: {
-                    id: user.id,
-                    name: data.name,
-                    email: data.email,
-                    password: data.password || undefined, // Si le mot de passe est vide, ne pas l'envoyer
-                    role: data.role,
-                },
-            });
+        setLoading(true);
+        const { data: success, errors } = await updateUser({
+            variables: {
+                id: user.id,
+                name: data.name,
+                email: data.email,
+                password: data.password || undefined, // Si le mot de passe est vide, ne pas l'envoyer
+                role: data.role,
+            },
+        });
+        if (success) {
             toast({
                 title: "Usuario actualizado",
                 description: "El usuario se ha actualizado correctamente",
@@ -75,7 +75,8 @@ export const UserEditForm: React.FC<UserEditFormProps> = ({ user }) => {
                 pathname: '/admin/users',
                 query: { reload: true },
             });
-        } catch (err) {
+        }
+        if (errors) {
             toast({
                 title: "Error",
                 description: "Hubo un problema al actualizar el usuario",

@@ -1,6 +1,6 @@
 import { PrismaClient, User } from "@prisma/client";
 import prisma from "../../lib/prisma";
-import { IncomingMessage, ServerResponse } from "http";
+import { IncomingMessage } from "http";
 import { authenticateUser } from "./auth";
 
 export type GraphQLContext = {

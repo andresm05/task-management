@@ -14,7 +14,7 @@ const CreateUserPage: React.FC = () => {
 
     const router = useRouter();
 
-    const handleBack = (event: any) => {
+    const handleBack = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         router.back();
     };

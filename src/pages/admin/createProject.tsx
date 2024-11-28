@@ -15,7 +15,7 @@ const CreateItemPage: React.FC = () => {
     const user = useMiddleware(Role.ADMIN);
     const router = useRouter();
 
-    const handleBack = (event: any) => {
+    const handleBack = (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
         router.back();
     };

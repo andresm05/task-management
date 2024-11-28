@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useMutation } from "@apollo/client";
 import { UPDATE_PROJECT } from "@/utils/graphql/mutations/project";
@@ -35,8 +34,8 @@ const EditProjectPopup: React.FC<EditProjectPopupProps> = ({
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = async() => {
-    const {data, errors} = await updateProject({
+  const handleSave = async () => {
+    await updateProject({
       variables: {
         id: project.id,
         name: formData.name,

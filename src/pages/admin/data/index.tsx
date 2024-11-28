@@ -28,7 +28,7 @@ import { Task } from "@/types/tasks"
 const Chart = () => {
 
     const user = useMiddleware(Role.ADMIN);
-    const { data, error, loading } = useQuery<GetProjects>(GET_PROJECTS);
+    const { data, loading } = useQuery<GetProjects>(GET_PROJECTS);
     const projects = data?.projects || [];
 
     if (loading) {
@@ -91,7 +91,7 @@ const Chart = () => {
                                 tickLine={false}
                                 tickMargin={10}
                                 axisLine={false}
-                                tickFormatter={(value: any) =>
+                                tickFormatter={(value: string) =>
                                     String(chartConfig[value as keyof typeof chartConfig]?.label || "")
                                 }
                             />
