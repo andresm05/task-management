@@ -92,7 +92,7 @@ const Chart = () => {
                                 tickLine={false}
                                 tickMargin={10}
                                 axisLine={false}
-                                tickFormatter={(value: any) =>
+                                tickFormatter={(value: string) =>
                                     String(chartConfig[value as keyof typeof chartConfig]?.label || "")
                                 }
                             />
