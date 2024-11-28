@@ -13,12 +13,7 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Project } from "@/types/projects";
 import { Task } from "@/types/tasks";
-
-const TaskStatus = {
-  PENDING: "Pending",
-  IN_PROGRESS: "In Progress",
-  COMPLETED: "Completed",
-};
+import { TaskStatus } from "@/types/tasks";
 
 export const DonutData = () => {
   const { data: projectsData, loading: projectsLoading } = useQuery(GET_PROJECTS);
@@ -34,7 +29,7 @@ export const DonutData = () => {
     } else {
       // Filtrar tareas del proyecto seleccionado
       const selectedProject = projectsData.projects.find(
-        (project: any) => project.id === selectedProjectId
+        (project: Project) => project.id === selectedProjectId
       );
       return selectedProject ? selectedProject.tasks : [];
     }
@@ -58,7 +53,7 @@ export const DonutData = () => {
     const saturation = Math.floor(Math.random() * 40) + 60; // 60% - 100%
     const lightness = Math.floor(Math.random() * 30) + 50; // 50% - 80%
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
-};
+  };
 
   const chartData = [
     { name: "Pending", value: taskCounts.PENDING, color: generateRandomColor() },
