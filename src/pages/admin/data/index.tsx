@@ -29,7 +29,7 @@ import { Task } from "@/types/tasks"
 const Chart = () => {
 
     const user = useMiddleware(Role.ADMIN);
-    const { data, error, loading } = useQuery<GetProjects>(GET_PROJECTS);
+    const { data, loading } = useQuery<GetProjects>(GET_PROJECTS);
     const projects = data?.projects || [];
 
     if (loading) {

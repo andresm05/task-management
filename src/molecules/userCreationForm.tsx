@@ -19,7 +19,7 @@ import { z } from "zod";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER_MUTATION } from "@/utils/graphql/mutations/users";
 import { useRouter } from "next/router";
-import {Icons} from "@/components/ui/icons";
+import { Icons } from "@/components/ui/icons";
 
 const FormSchema = z.object({
     name: z.string().nonempty({
@@ -52,16 +52,16 @@ export const UserCreationForm: React.FC = () => {
     const [loading, setLoading] = React.useState<boolean>(false);
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-        try {
-            setLoading(true);
-            await createUser({
-                variables: {
-                    name: data.name,
-                    email: data.email,
-                    password: data.password,
-                    role: data.role,
-                },
-            });
+        setLoading(true);
+        const { errors, data: success } = await createUser({
+            variables: {
+                name: data.name,
+                email: data.email,
+                password: data.password,
+                role: data.role,
+            },
+        });
+        if (success) {
             toast({
                 title: "Usuario añadido",
                 description: "El usuario se ha añadido correctamente",
@@ -70,13 +70,15 @@ export const UserCreationForm: React.FC = () => {
                 pathname: '/admin/users',
                 query: { reload: true },
             });
-        } catch (err) {
+        }
+        if (errors) {
             toast({
                 title: "Error",
                 description: "Hubo un problema al añadir el usuario",
             });
             setLoading(false);
         }
+
     };
 
     return (
