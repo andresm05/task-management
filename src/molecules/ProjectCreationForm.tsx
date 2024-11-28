@@ -14,7 +14,7 @@ const CreateProjectPage: React.FC = () => {
   const [description, setDescription] = useState("");
   const [openInfo, setOpenInfo] = useState(false);
   const [openError, setOpenError] = useState(false);
-  const [createProject, { loading, error, data }] = useMutation(CREATE_PROJECT);
+  const [createProject, { loading}] = useMutation(CREATE_PROJECT);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

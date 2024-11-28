@@ -28,7 +28,7 @@ const CreateTaskPage: React.FC = () => {
   const { data } = useQuery<AllUsers>(GET_ALL_USERS_QUERY);
   const users = data?.users || [];
 
-  const handleBack = (event: any) => {
+  const handleBack = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     router.back();
   };

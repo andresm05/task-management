@@ -12,14 +12,14 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {Check, Plus} from "lucide-react";
+import {Check} from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
 import { UPDATE_USER_MUTATION } from "@/utils/graphql/mutations/users";
 import { useRouter } from "next/router";
-import { Role, UserProps } from "@/utils/enums";
+import { UserProps } from "@/utils/enums";
 import {Icons} from "@/components/ui/icons";
 
 const FormSchema = z.object({

@@ -13,7 +13,7 @@ import { AllUsers, Role } from "@/types/users";
 import { GET_ALL_USERS_QUERY } from "@/utils/graphql/queries/users";
 import IsLoading from "./isLoading";
 import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 
 interface EditTaskPopupProps {
   open: boolean;
