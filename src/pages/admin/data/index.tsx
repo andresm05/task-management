@@ -1,7 +1,6 @@
-"use client"
-
 import { TrendingUp } from "lucide-react"
 import { Bar, BarChart, XAxis, YAxis } from "recharts"
+import DonutData from "@/molecules/donutData"
 
 import {
     Card,
@@ -114,6 +113,7 @@ const Chart = () => {
                     </div>
                 </CardFooter>
             </Card>
+            <DonutData/>
         </AdminLayout>
     )
 }
