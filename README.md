@@ -3,24 +3,27 @@
 El Sistema de Gestión de Tareas es una aplicación diseñada para facilitar la organización, asignación y seguimiento de tareas dentro de proyectos. El sistema permite a los usuarios gestionar transacciones, maestros y usuarios con roles diferenciados (ADMIN y USER), asegurando control y accesibilidad según los permisos definidos. Este proyecto está construido con tecnologías modernas como Next.js, TypeScript, Tailwind CSS, Prisma, GraphQL y Supabase.
 
 # Funcionalidades Principales
+
 ### Autenticación de Usuarios
 - Inicio de sesión seguro.
 - Diferenciación de roles: ADMIN y USER.
 - Gestión de Transacciones
-### Visualización de movimientos relacionados con un Maestro.
+
+### Visualización de movimientos relacionados con un Usuario.
 - Creación de nuevas tareas con actualizaciones.
 - Gráfica de evolución de tareas.
-- Gestión de Maestros
+- Gestión de Usuarios
 - Visualización de todos los usuarios con detalles como tarea y responsable.
 - Creación de nuevos usuarios (solo para usuarios ADMIN).
+
 ### Gestión de Usuarios
 - Visualización y modificación de roles (solo para usuarios ADMIN).
 
 # Sidebar
 ### Navegación constante con enlaces a las secciones principales:
-- Información personal del usuario.
-- Transacciones (ADMIN y USER).
-- Usuarios (solo ADMIN).
+- Gestión de usuarios (ADMIN).
+- Análisis de datos (ADMIN y USER).
+- Gestión de Proyectos (ADMIN y USER).
 
 # Tecnologías Usadas
 - Framework Frontend: Next.js
@@ -33,8 +36,7 @@ El Sistema de Gestión de Tareas es una aplicación diseñada para facilitar la 
 
 ## Instrucciones de Configuración
 
-1. Clonar el Repositorio
-bash
+#### Clonar el Repositorio
 
 Copiar código
 
@@ -42,37 +44,34 @@ Copiar código
 git clone <URL_DEL_REPOSITORIO>
 cd <NOMBRE_DEL_PROYECTO>
 ```
-2. Instalar Dependencias
-bash
-Copiar código
 
+#### Instalar Dependencias
+
+Copiar código
 ```bash
 yarn install
 ```
 
-3. Configurar la Base de Datos
+#### Configurar la Base de Datos
 Crear una base de datos en Supabase.
 Configurar la variable de entorno DATABASE_URL en un archivo .env:
 
 Copiar código
-
 ```bash
 DATABASE_URL=tu_string_de_conexion
 ```
 
-4. Ejecutar Migraciones
+#### Ejecutar Migraciones
 Inicializar las tablas de la base de datos:
 
-bash
 Copiar código
 ```bash
 npx prisma migrate dev --name migracion-inicial
 ```
 
-5. Iniciar el Servidor
-bash
-Copiar código
+#### Iniciar el Servidor
 
+Copiar código
 ```bash
 yarn dev
 ```
@@ -93,6 +92,12 @@ Acceder al sistema en: http://localhost:3000
 /styles                    -> Estilos globales y módulos CSS.
 /public                    -> Archivos estáticos.
 /lib                       -> Clientes de Apollo y Prisma.
+```
+
+# Despliegue 
+
+```bash
+https://task-management-omega-one.vercel.app/
 ```
 
 ### Contacto
