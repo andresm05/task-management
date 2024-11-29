@@ -12,12 +12,11 @@ El Sistema de Gestión de Tareas es una aplicación diseñada para facilitar la 
 ### Visualización de movimientos relacionados con un Usuario.
 - Creación de nuevas tareas con actualizaciones.
 - Gráfica de evolución de tareas.
-- Gestión de Usuarios
 - Visualización de todos los usuarios con detalles como tarea y responsable.
 - Creación de nuevos usuarios (solo para usuarios ADMIN).
 
 ### Gestión de Usuarios
-- Visualización y modificación de roles (solo para usuarios ADMIN).
+- Visualización, modificación de roles y eliminación (solo para usuarios ADMIN).
 
 # Sidebar
 ### Navegación constante con enlaces a las secciones principales:
@@ -34,7 +33,7 @@ El Sistema de Gestión de Tareas es una aplicación diseñada para facilitar la 
 - API: GraphQL con Apollo Server v4
 - Gestión de Paquetes: Yarn
 
-## Instrucciones de Configuración
+# Instrucciones de Configuración
 
 #### Clonar el Repositorio
 
