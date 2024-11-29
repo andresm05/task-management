@@ -14,7 +14,6 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 - Gestión autónoma de tareas y proyectos: modificar, reasignar y eliminar.
 - Acceso a una sección de **analítica**, donde se representan gráficamente:
   - Estado de los proyectos (progreso, tareas pendientes y completadas).
-  - Desempeño de los responsables asignados.
 
 ### Gestión de Usuarios (ADMIN)
 - Visualización y edición de usuarios.
@@ -31,7 +30,7 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 - Gráficas interactivas que muestran:
   - Progreso general por proyecto.
   - Distribución de tareas por estado.
-  - 
+
 ### Gestión de Transacciones
 - Registro y visualización de movimientos relacionados con los usuarios.
 - Histórico de acciones realizadas dentro del sistema.
