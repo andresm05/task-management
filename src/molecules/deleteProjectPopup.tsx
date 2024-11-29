@@ -26,22 +26,19 @@ const DeleteProjectPopup: React.FC<DeleteProjectPopupProps> = ({
   });
 
   const handleDelete = async () => {
-    try {
-      const { data } = await deleteProject({
-        variables: {
-          id: project.id,
-        },
-      });
+    const { data, errors } = await deleteProject({
+      variables: {
+        id: project.id,
+      },
+    });
 
-      if (data) {
-        toast.success("Proyecto eliminado exitosamente.");
-      }
-    } catch (error) {
-      toast.error("Ocurrió un error al eliminar el proyecto.");
-    } finally {
-      setOpen(false);
+    if (data) {
+      toast.success("Proyecto eliminado exitosamente.");
     }
-  };
+    if (errors) {
+      toast.error("Error al eliminar el proyecto.");
+    }
+  }
 
   return (
     <>
