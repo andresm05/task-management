@@ -1,22 +1,41 @@
 # Descripción del Proyecto
 
-El Sistema de Gestión de Tareas es una aplicación diseñada para facilitar la organización, asignación y seguimiento de tareas dentro de proyectos. El sistema permite a los usuarios gestionar transacciones, maestros y usuarios con roles diferenciados (ADMIN y USER), asegurando control y accesibilidad según los permisos definidos. Este proyecto está construido con tecnologías modernas como Next.js, TypeScript, Tailwind CSS, Prisma, GraphQL y Supabase.
+El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar la organización, asignación y seguimiento de tareas dentro de proyectos. El sistema permite a los usuarios gestionar transacciones, maestros y usuarios con roles diferenciados (`ADMIN` y `USER`), asegurando control y accesibilidad según los permisos definidos. Este proyecto está construido con tecnologías modernas como **Next.js**, **TypeScript**, **Tailwind CSS**, **Prisma**, **GraphQL** y **Supabase**.
 
-# Funcionalidades Principales
+## Funcionalidades Principales
 
 ### Autenticación de Usuarios
 - Inicio de sesión seguro.
-- Diferenciación de roles: ADMIN y USER.
-- Gestión de Transacciones
+- Diferenciación de roles: `ADMIN` y `USER`.
 
-### Visualización de movimientos relacionados con un Usuario.
-- Creación de nuevas tareas con actualizaciones.
-- Gráfica de evolución de tareas.
-- Visualización de todos los usuarios con detalles como tarea y responsable.
-- Creación de nuevos usuarios (solo para usuarios ADMIN).
+### Gestión de Proyectos y Tareas (ADMIN)
+- Creación de nuevos proyectos.
+- Asignación de tareas y responsables a cada proyecto.
+- Gestión autónoma de tareas y proyectos: modificar, reasignar y eliminar.
+- Acceso a una sección de **analítica**, donde se representan gráficamente:
+  - Estado de los proyectos (progreso, tareas pendientes y completadas).
+  - Desempeño de los responsables asignados.
 
-### Gestión de Usuarios
-- Visualización, modificación de roles y eliminación (solo para usuarios ADMIN).
+### Gestión de Usuarios (ADMIN)
+- Visualización y edición de usuarios.
+- Modificación de roles (`ADMIN` o `USER`).
+- Eliminación de usuarios.
+- Creación de nuevos usuarios.
+
+### Funcionalidades para Usuarios (USER)
+- Visualización exclusiva de los proyectos y tareas en los que han sido asignados como responsables.
+- Posibilidad de cambiar únicamente el estado de las tareas asignadas.
+  - Estados disponibles: "Pendiente", "En progreso" y "Completada".
+
+### Analítica (ADMIN)
+- Gráficas interactivas que muestran:
+  - Progreso general por proyecto.
+  - Distribución de tareas por estado.
+  - 
+### Gestión de Transacciones
+- Registro y visualización de movimientos relacionados con los usuarios.
+- Histórico de acciones realizadas dentro del sistema.
+
 
 # Sidebar
 ### Navegación constante con enlaces a las secciones principales:
