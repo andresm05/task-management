@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { useQuery } from "@apollo/client";
 import { GET_USER_QUERY } from "@/utils/graphql/queries/users";
 import useMiddleware from "@/hooks/useMiddleware";
-import IsLoading from "@/molecules/isLoading";
+import {IsLoading} from "@/molecules/isLoading";
 import { Role } from "@/utils/enums";
 
 const EditUserPage: React.FC = () => {

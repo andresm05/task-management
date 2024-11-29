@@ -11,9 +11,10 @@ import { handleShowStatus } from "@/utils/helpers";
 import useMiddleware from "@/hooks/useMiddleware";
 import { AllUsers, Role } from "@/types/users";
 import { GET_ALL_USERS_QUERY } from "@/utils/graphql/queries/users";
-import IsLoading from "./isLoading";
+import {IsLoading} from "./isLoading";
 import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
 import { useRouter } from 'next/router';
+import { toast } from "react-toastify";
 
 interface EditTaskPopupProps {
   open: boolean;
@@ -50,7 +51,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
 
   const possibleStatus = ["PENDING", "IN_PROGRESS", "COMPLETED"];
 
-  const filteredUsers = users.filter((user) => user.id !== assignee.id);
+  const filteredUsers = users.filter((user) => user.id !== assignee?.id);
 
   const formatDueDate = (timestamp: string): string => {
     const date = new Date(parseInt(timestamp, 10)); // Asegúrate de convertir el string a número
@@ -85,8 +86,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
           setOpen(false);
 
 
-    try {
-      const { data } = await updateTask({
+      const { data: success, errors } = await updateTask({
         variables: {
           id,
           title: newTitle as string,
@@ -103,10 +103,13 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
         ],
         awaitRefetchQueries: true,
       });
-      console.log("Tarea actualizada:", data.updateTask);
-    } catch (err) {
-      console.error("Error al actualizar tarea:", err);
-    }
+      if(success) {
+        toast.success("Tarea actualizada correctamente");
+        setOpen(false);
+      }
+      if(errors) {
+        toast.error("Error al actualizar la tarea");
+      }
   };
 
 
@@ -143,7 +146,7 @@ const EditTaskPopup: React.FC<EditTaskPopupProps> = ({
               className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-black"
               disabled={!isAdmin}
             >
-              <option value={assignee.id}>{assignee.name}</option>
+              <option value={assignee?.id || ''}>{assignee?.name || 'Sin asignar'}</option>
               {filteredUsers.map((user) => (
                 <option key={user.id} value={user.id}>
                   {user.name}

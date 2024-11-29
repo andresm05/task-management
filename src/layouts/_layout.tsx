@@ -1,7 +1,6 @@
 import React from "react";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/molecules/sidebar";
-import {Toaster} from "@/components/ui/toaster";
 import {ChartCandlestick, User, Album} from "lucide-react";
 import {Role, UserProps} from "@/utils/enums";
 
@@ -46,7 +45,6 @@ export default function AdminLayout({ children, user } : AdminLayoutProps) {
                 <SidebarTrigger />
                 {children}
             </main>
-            <Toaster />
         </SidebarProvider>
     );
 };

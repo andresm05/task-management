@@ -5,6 +5,7 @@ import { useMutation } from "@apollo/client";
 import { UPDATE_PROJECT } from "@/utils/graphql/mutations/project";
 import { Project } from "@/types/projects";
 import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
+import { toast } from "react-toastify";
 
 interface EditProjectPopupProps {
   open: boolean;
@@ -35,13 +36,20 @@ const EditProjectPopup: React.FC<EditProjectPopupProps> = ({
   };
 
   const handleSave = async () => {
-    await updateProject({
+    const { data, errors } = await updateProject({
       variables: {
         id: project.id,
         name: formData.name,
         description: formData.description,
       },
     });
+
+    if (data) {
+      toast.success("Proyecto actualizado correctamente");
+    }
+    if (errors) {
+      toast.error("Ha ocurrido un error al actualizar el proyecto");
+    }
 
     setOpen(false);
 

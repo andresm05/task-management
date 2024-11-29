@@ -8,7 +8,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import { GET_ALL_USERS_QUERY } from "@/utils/graphql/queries/users";
-import IsLoading from "@/molecules/isLoading";
+import {IsLoading} from "@/molecules/isLoading";
 import { Role } from "@/utils/enums";
 
 export default function AdminUsersPage() {

@@ -10,7 +10,7 @@ import { GET_ALL_USERS_QUERY } from '@/utils/graphql/queries/users';
 import { AllUsers, Role } from '@/types/users';
 import useMiddleware from '@/hooks/useMiddleware';
 import AdminLayout from '@/layouts/_layout';
-import IsLoading from '@/molecules/isLoading';
+import {IsLoading} from '@/molecules/isLoading';
 import { Undo2 } from 'lucide-react';
 import { GET_TASKS_BY_PROJECT } from '@/utils/graphql/queries/tasks';
 import { Alert, Snackbar } from '@mui/material';

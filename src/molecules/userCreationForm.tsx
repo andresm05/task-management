@@ -13,14 +13,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
 import { CREATE_USER_MUTATION } from "@/utils/graphql/mutations/users";
 import { useRouter } from "next/router";
 import { Icons } from "@/components/ui/icons";
-
+import { toast } from 'react-toastify';
 const FormSchema = z.object({
     name: z.string().nonempty({
         message: "El nombre no puede estar vacío",
@@ -62,20 +61,15 @@ export const UserCreationForm: React.FC = () => {
             },
         });
         if (success) {
-            toast({
-                title: "Usuario añadido",
-                description: "El usuario se ha añadido correctamente",
-            });
+            toast.success("Usuario creado exitosamente");
+
             router.push({
                 pathname: '/admin/users',
                 query: { reload: true },
             });
         }
         if (errors) {
-            toast({
-                title: "Error",
-                description: "Hubo un problema al añadir el usuario",
-            });
+            toast.error("Ocurrió un error al crear el usuario");
             setLoading(false);
         }
 

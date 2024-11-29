@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { LOGIN_MUTATION } from "@/utils/graphql/mutations/auth";
 import { useRouter } from "next/router";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 
 
 export function UserAuthForm({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
@@ -35,11 +35,7 @@ export function UserAuthForm({ className, ...props }: React.HTMLAttributes<HTMLD
             await router.push('/admin');
         }
         if (errors) {
-
-            toast({
-                title: "Ocurrió un error",
-                description: "Usuario o contraseña incorrectos",
-            });
+            toast.error("Usuario o contraseña incorrectos");
             setWrongPassword(true);
         }
 

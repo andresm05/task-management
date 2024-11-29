@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Check } from "lucide-react";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "react-toastify";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useMutation } from "@apollo/client";
@@ -66,10 +66,7 @@ export const UserEditForm: React.FC<UserEditFormProps> = ({ user }) => {
             },
         });
         if (success) {
-            toast({
-                title: "Usuario actualizado",
-                description: "El usuario se ha actualizado correctamente",
-            });
+            toast.success("Usuario actualizado exitosamente");
             setLoading(false);
             router.push({
                 pathname: '/admin/users',
@@ -77,10 +74,7 @@ export const UserEditForm: React.FC<UserEditFormProps> = ({ user }) => {
             });
         }
         if (errors) {
-            toast({
-                title: "Error",
-                description: "Hubo un problema al actualizar el usuario",
-            });
+            toast.error("Ocurrió un error al actualizar el usuario");
             setLoading(false);
         }
     };

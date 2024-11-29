@@ -6,6 +6,7 @@ import { Task, TaskByProject } from "@/types/tasks";
 import { TaskCard } from "./taskCard";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/types/users";
+import { Alert } from "@mui/material";
 
 interface TaskDataProps {
   id: string; // ID del proyecto
@@ -36,12 +37,34 @@ const TaskData: React.FC<TaskDataProps> = ({ id }) => {
 
   return (
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2">
-      {user?.role === Role.USER && filteredTasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
-      ))}
-      {user?.role === Role.ADMIN && tasks.map((task) => (
-        <TaskCard key={task.id} task={task} />
-      ))}
+      {user?.role === Role.USER &&
+        (<>
+          {filteredTasks.length === 0 ? (
+            <Alert severity="info">No tienes tareas asignadas</Alert>
+          ) :
+            <>
+              {filteredTasks.map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            </>
+          }
+
+        </>
+        )}
+      {user?.role === Role.ADMIN &&
+         (<>
+          {tasks.length === 0 ? (
+            <Alert severity="info">Aún no hay tareas para este Proyecto</Alert>
+          ) :
+            <>
+              {tasks.map((task) => (
+                <TaskCard key={task.id} task={task} />
+              ))}
+            </>
+          }
+
+        </>
+        )}
     </div>
   );
 };

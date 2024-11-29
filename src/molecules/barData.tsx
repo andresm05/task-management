@@ -19,7 +19,7 @@ import { Task } from "@/types/tasks"
 import { useQuery } from "@apollo/client"
 import { GET_PROJECTS } from "@/utils/graphql/queries/projects"
 import { useState } from "react"
-import IsLoading from "./isLoading"
+import {IsLoading} from "./isLoading"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Alert } from "@mui/material"
 

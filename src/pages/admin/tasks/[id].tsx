@@ -7,7 +7,7 @@ import Link from "next/link";
 import AdminLayout from "@/layouts/_layout";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/utils/enums";
-import IsLoading from "@/molecules/isLoading";
+import {IsLoading} from "@/molecules/isLoading";
 
 const TasksProject = () => {
   const router = useRouter();

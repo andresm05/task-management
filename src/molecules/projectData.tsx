@@ -5,7 +5,8 @@ import { GET_PROJECTS } from "@/utils/graphql/queries/projects";
 import { useQuery } from "@apollo/client";
 import { ProjectCard } from "@/molecules/projectCard";
 import { useEffect, useState } from "react";
-import IsLoading from "./isLoading";
+import { IsLoading } from "./isLoading";
+import { Alert } from "@mui/material";
 
 export const ProjectData = () => {
   const { data, error, loading } = useQuery<GetProjects>(GET_PROJECTS);
@@ -30,7 +31,7 @@ export const ProjectData = () => {
   if (loading) return <p>Cargando Proyectos...</p>;
   if (error) return <p>Error al cargar proyectos: {error.message}</p>;
 
-  if(!user || !projects) {
+  if (!user || !projects) {
     return <IsLoading />
   }
 
@@ -38,6 +39,10 @@ export const ProjectData = () => {
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
       {user?.role === Role.USER && (
         <>
+          {filteredProjects.length === 0 ? (
+            <Alert severity="info">No tienes proyectos asignados</Alert>
+          ) : null
+          }
           {filteredProjects.map((project) => (
             <ProjectCard key={project.id} project={project} />
           ))}

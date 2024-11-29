@@ -3,7 +3,7 @@ import useMiddleware from "@/hooks/useMiddleware";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
-import IsLoading from "@/molecules/isLoading";
+import {IsLoading} from "@/molecules/isLoading";
 import { Role } from "@/utils/enums";
 import { ProjectData } from "@/molecules/projectData";
 import { useEffect, useState } from "react";

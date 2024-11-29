@@ -1,7 +1,7 @@
 import AdminLayout from "@/layouts/_layout"
 import useMiddleware from "@/hooks/useMiddleware"
 import { Role } from "@/types/users"
-import IsLoading from "@/molecules/isLoading"
+import {IsLoading} from "@/molecules/isLoading"
 import { BarData } from "@/molecules/barData"
 import {DonutData} from '@/molecules/donutData';
 

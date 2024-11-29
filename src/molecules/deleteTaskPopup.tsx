@@ -4,6 +4,7 @@ import { useMutation } from "@apollo/client";
 import { Task } from "@/types/tasks";
 import { useRouter } from 'next/router';
 import { GET_TASKS_BY_PROJECT } from "@/utils/graphql/queries/tasks";
+import { toast } from "react-toastify";
 
 interface DeleteTaskPopupProps {
   open: boolean;
@@ -26,7 +27,13 @@ const DeleteTaskPopup: React.FC<DeleteTaskPopupProps> = ({ open, task, setOpen }
 
 
   const handleDelete = async () => {
-    await deleteTask();
+    const {data, errors} = await deleteTask();
+    if(data){
+      toast.success("Tarea eliminada correctamente");
+    }
+    if(errors){
+      toast.error("Ha ocurrido un error al eliminar la tarea");
+    }
 
     setOpen(false);
 

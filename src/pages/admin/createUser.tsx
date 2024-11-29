@@ -5,7 +5,7 @@ import { UserCreationForm } from "@/molecules/userCreationForm";
 import { Button } from "@/components/ui/button";
 import { Undo2 } from "lucide-react";
 import { useRouter } from "next/router";
-import IsLoading from "@/molecules/isLoading";
+import {IsLoading} from "@/molecules/isLoading";
 import useMiddleware from "@/hooks/useMiddleware";
 import { Role } from "@/utils/enums";
 
