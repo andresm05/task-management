@@ -51,6 +51,42 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 - API: GraphQL con Apollo Server v4
 - Gestión de Paquetes: Yarn
 
+
+# Rutas de la Aplicación
+### Rutas Principales
+#### /admin
+URL: https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin
+**Descripción:** 
+Página principal para ADMIN. Aquí se pueden ver los proyectos creados y navegar a otras secciones para usuario Admin, 
+Para el Usuario solo puede ver los proyectos y las tareas que le an sido asignados.
+
+#### /data
+**URL:** https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/data
+**Descripción:** Sección de estadísticas donde se visualizan tareas completadas, gráficos de progreso, y distribución de tareas por estado (Solo admin).
+
+#### /tasks/:id
+URL: https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/tasks/1
+**Descripción:** Página para visualizar la lista de tareas asignadas a un proyecto específico (Admin y user).
+
+#### /users
+**URL:** https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/users
+**Descripción:** Página para la gestión de usuarios (solo Admin). Permite:
+
+- Crear nuevos usuarios.
+- Editar roles existentes.
+- Eliminar usuarios.
+# Usuarios por Defecto
+### Usuario ADMIN
+
+Correo: admin@gmail.com
+Contraseña: admin123
+
+### Usuario USER
+
+Correo: user@gmail.com
+Contraseña: user123
+
+
 # Instrucciones de Configuración
 
 #### Clonar el Repositorio
@@ -114,7 +150,7 @@ Acceder al sistema en: http://localhost:3000
 # Despliegue 
 
 ```bash
-https://task-management-omega-one.vercel.app/
+https://jaime-munoz-alejandro-becerra-task-management.vercel.app/
 ```
 
 ### Contacto
