@@ -63,6 +63,7 @@ Para el Usuario solo puede ver los proyectos y las tareas que le an sido asignad
 
 #### /data
 **URL:** https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/data
+
 **Descripción:** Sección de estadísticas donde se visualizan tareas completadas, gráficos de progreso, y distribución de tareas por estado (Solo admin).
 
 #### /tasks/:id
@@ -72,6 +73,7 @@ URL: https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/task
 
 #### /users
 **URL:** https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/users
+
 **Descripción:** Página para la gestión de usuarios (solo Admin). Permite:
 
 - Crear nuevos usuarios.
