@@ -55,7 +55,8 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 # Rutas de la Aplicación
 ### Rutas Principales
 #### /admin
-URL: https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin
+**URL:** https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin
+
 **Descripción:** 
 Página principal para ADMIN. Aquí se pueden ver los proyectos creados y navegar a otras secciones para usuario Admin, 
 Para el Usuario solo puede ver los proyectos y las tareas que le an sido asignados.
@@ -66,6 +67,7 @@ Para el Usuario solo puede ver los proyectos y las tareas que le an sido asignad
 
 #### /tasks/:id
 URL: https://jaime-munoz-alejandro-becerra-task-management.vercel.app/admin/tasks/1
+
 **Descripción:** Página para visualizar la lista de tareas asignadas a un proyecto específico (Admin y user).
 
 #### /users
