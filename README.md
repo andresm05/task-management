@@ -36,7 +36,7 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 - Histórico de acciones realizadas dentro del sistema.
 
 
-# Sidebar
+## Barra de navegación
 ### Navegación constante con enlaces a las secciones principales:
 - Gestión de usuarios (ADMIN).
 - Análisis de datos (ADMIN y USER).
