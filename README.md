@@ -39,8 +39,8 @@ El **Sistema de Gestión de Tareas** es una aplicación diseñada para facilitar
 ## Barra de navegación
 ### Navegación constante con enlaces a las secciones principales:
 - Gestión de usuarios (ADMIN).
-- Análisis de datos (ADMIN y USER).
-- Gestión de Proyectos (ADMIN y USER).
+- Análisis de datos (ADMIN).
+- Gestión de Proyectos y tareas (ADMIN y USER).
 
 # Tecnologías Usadas
 - Framework Frontend: Next.js
