@@ -97,7 +97,6 @@ Contraseña: user123
 
 #### Clonar el Repositorio
 
-Copiar código
 
 ```bash
 git clone <URL_DEL_REPOSITORIO>
@@ -106,7 +105,6 @@ cd <NOMBRE_DEL_PROYECTO>
 
 #### Instalar Dependencias
 
-Copiar código
 ```bash
 yarn install
 ```
@@ -115,7 +113,6 @@ yarn install
 Crear una base de datos en Supabase.
 Configurar la variable de entorno DATABASE_URL en un archivo .env:
 
-Copiar código
 ```bash
 DATABASE_URL=tu_string_de_conexion
 ```
@@ -123,14 +120,12 @@ DATABASE_URL=tu_string_de_conexion
 #### Ejecutar Migraciones
 Inicializar las tablas de la base de datos:
 
-Copiar código
 ```bash
 npx prisma migrate dev --name migracion-inicial
 ```
 
 #### Iniciar el Servidor
 
-Copiar código
 ```bash
 yarn dev
 ```
@@ -155,9 +150,8 @@ Acceder al sistema en: http://localhost:3000
 
 # Despliegue 
 
-```bash
 https://jaime-munoz-alejandro-becerra-task-management.vercel.app/
-```
+
 
 ### Contacto
 
